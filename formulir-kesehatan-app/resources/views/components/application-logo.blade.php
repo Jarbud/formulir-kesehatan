@@ -1,0 +1,1 @@
+<img src="{{ asset('images/logo.png') }}" alt="Logo UM" class="w-100" style="height: 7rem;">
