@@ -56,59 +56,77 @@
                             <h4 class="font-bold text-blue-900 border-b pb-1 text-sm uppercase tracking-wider">I. Identitas Mahasiswa</h4>
                             
                             <div class="flex flex-col">
-                                <label class="text-xs font-bold text-gray-500 uppercase">Nama Lengkap</label>
+                                <label class="text-xs font-bold text-gray-500 uppercase">Nama Lengkap <span style="color: red;">*</span><label>
                                 <input type="text" name="name" value="{{ Auth::user()->name }}" class="mt-1 border-none bg-gray-50 rounded-lg p-2 font-semibold text-gray-800">
                             </div>
                             <div class="grid grid-cols-2 gap-4">
                                 <div class="flex flex-col">
-                                    <label class="text-xs font-bold text-gray-500 uppercase">NIK</label>
+                                    <label class="text-xs font-bold text-gray-500 uppercase">NIK <span style="color: red;">*</span></label>
                                     <input type="text" name="nik" class="mt-1 border-none bg-gray-50 rounded-lg p-2 font-semibold text-gray-800">
                                 </div>
                                 <div class="flex flex-col">
-                                    <label class="text-xs font-bold text-gray-500 uppercase">NIM</label>
+                                    <label class="text-xs font-bold text-gray-500 uppercase">NIM <span style="color: red;">*</span></label>
                                     <input type="text" name="nim" class="mt-1 border-none bg-gray-50 rounded-lg p-2 font-semibold text-gray-800">
                                 </div>
                             </div>
 
                             <div class="grid grid-cols-2 gap-4">
                                 <div class="flex flex-col">
-                                    <label class="text-xs font-bold text-gray-500 uppercase">Jenis Kelamin</label>
+                                    <label class="text-xs font-bold text-gray-500 uppercase">Jenis Kelamin <span style="color: red;">*</span></label>
                                     <select name="jenis_kelamin" class="mt-1 border-none bg-gray-50 rounded-lg p-2 font-semibold text-gray-800">
                                         <option value="laki-laki">Laki-laki</option>
                                         <option value="perempuan">Perempuan</option>
                                     </select>
                                 </div>
                                 <div class="flex flex-col">
-                                    <label class="text-xs font-bold text-gray-500 uppercase">Usia</label>
+                                    <label class="text-xs font-bold text-gray-500 uppercase">Usia <span style="color: red;">*</span></label>
                                     <input type="number" name="usia" class="mt-1 border-none bg-gray-50 rounded-lg p-2 font-semibold text-gray-800">
                                 </div>
                             </div>
 
                             <div class="grid grid-cols-2 gap-4">
                                 <div class="flex flex-col">
-                                    <label class="text-xs font-bold text-gray-500 uppercase">Fakultas</label>
-                                    <select name="fakultas" class="mt-1 border-none bg-gray-50 rounded-lg p-2 font-semibold text-gray-800">
-                                        <option value="FIP">FIP</option>
-                                        <option value="FS">FS</option>
-                                        <option value="FEB">FEB</option>
-                                        <option value="FT">FT</option>
-                                        <option value="FIK">FIK</option>
-                                        <option value="FIS">FIS</option>
-                                        <option value="FK">FK</option>
+                                    <label class="text-xs font-bold text-gray-500 uppercase">Fakultas <span style="color: red;">*</span></label>
+                                    <select id="select-fakultas" name="fakultas" class="mt-1 border-none bg-gray-50 rounded-lg p-2 font-semibold text-gray-800" onchange="updateProdi()">
+                                        <option value="">-- Pilih Fakultas --</option>
+                                        @foreach($faculties as $faculty)
+                                            {{-- value menggunakan ID, teks dropdown menggunakan nama lengkap fakultas --}}
+                                            <option value="{{ $faculty->id }}">{{ $faculty->name }}</option>
+                                        @endforeach
                                     </select>
                                 </div>
+
                                 <div class="flex flex-col">
-                                    <label class="text-xs font-bold text-gray-500 uppercase">Prodi</label>
-                                    <select name="prodi" class="mt-1 border-none bg-gray-50 rounded-lg p-2 font-semibold text-gray-800">
-                                        <option value="S1 Bimbingan dan Konseling">S1 Bimbingan dan Konseling</option>
-                                        <option value="S1 Teknologi Penelitian">S1 Teknologi Penelitian</option>
+                                    <label class="text-xs font-bold text-gray-500 uppercase">Prodi <span style="color: red;">*</span></label>
+                                    <select id="select-prodi" name="prodi" class="mt-1 border-none bg-gray-50 rounded-lg p-2 font-semibold text-gray-800" disabled>
+                                        <option value="">-- Pilih Fakultas Terlebih Dahulu --</option>
                                     </select>
                                 </div>
                             </div>
 
                             <div class="flex flex-col">
-                                <label class="text-xs font-bold text-gray-500 uppercase">Tempat, Tanggal Lahir</label>
+                                <label class="text-xs font-bold text-gray-500 uppercase">Tempat, Tanggal Lahir <span style="color: red;">*</span></label>
                                 <input type="text" name="tempat_tanggal_lahir" placeholder="Malang, 20 April 2000" class="mt-1 border-none bg-gray-50 rounded-lg p-2 font-semibold text-gray-800">
+                            </div>
+                            <div class="flex flex-col">
+                                <label class="text-xs font-bold text-gray-500 uppercase">Alamat Asal <span style="color: red;">*</span></label>
+                                <input required type="text" name="alamat_asal" class="mt-1 border-none bg-gray-50 rounded-lg p-2 font-semibold text-gray-800">
+                            </div>
+                            <div class="flex flex-col">
+                                <label class="text-xs font-bold text-gray-500 uppercase">Alamat Di Malang <span style="color: red;">*</span></label>
+                                <input required type="text" name="alamat_malang" class="mt-1 border-none bg-gray-50 rounded-lg p-2 font-semibold text-gray-800">
+                            </div>
+                            <div class="flex flex-col">
+                                <label class="text-xs font-bold text-gray-500 uppercase">Nomor Whatsapp yang dapat dihubungi <span style="color: red;">*</span></label>
+                                <input required type="text" name="wa" class="mt-1 border-none bg-gray-50 rounded-lg p-2 font-semibold text-gray-800">
+                            </div>
+                            <div class="flex flex-col">
+                                <label class="text-xs font-bold text-gray-500 uppercase">Nama Orang tua/Wali <span style="color: red;">*</span></label>
+                                <input required type="text" name="nama_wali" class="mt-1 border-none bg-gray-50 rounded-lg p-2 font-semibold text-gray-800">
+                            </div>
+                            <div class="flex flex-col">
+                                <label class="text-xs font-bold text-gray-500 uppercase">Nomor Whatsapp Orang tua/Wali <span style="color: red;">*</span></label>
+                                <input required type="text" name="wa_wali" class="mt-1 border-none bg-gray-50 rounded-lg p-2 font-semibold text-gray-800">
                             </div>
                             <div class="flex flex-col">
                                 <label class="text-xs font-bold text-gray-500 uppercase">Disabilitas</label>
@@ -125,11 +143,11 @@
                             
                             <div class="grid grid-cols-2 gap-4">
                                 <div class="flex flex-col">
-                                    <label class="text-xs font-bold text-gray-700 uppercase">Tinggi Badan (cm)</label>
+                                    <label class="text-xs font-bold text-gray-700 uppercase">Tinggi Badan (cm) <span class="text-red-500">*</span></label>
                                     <input type="number" id="tinggi_badan" name="tinggi_badan" class="mt-1 border-gray-300 rounded-lg p-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Contoh: 173" required>
                                 </div>
                                 <div class="flex flex-col">
-                                    <label class="text-xs font-bold text-gray-700 uppercase">Berat Badan (kg)</label>
+                                    <label class="text-xs font-bold text-gray-700 uppercase">Berat Badan (kg) <span class="text-red-500">*</span>label>
                                     <input type="number" id="berat_badan" name="berat_badan" class="mt-1 border-gray-300 rounded-lg p-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Contoh: 78" required>
                                 </div>
                             </div>
@@ -153,6 +171,70 @@
                         <div class="flex flex-col">
                             <label class="text-xs font-bold text-gray-700 uppercase">Riwayat Sakit</label>
                             <input type="text" name="riwayat_sakit" class="mt-1 border-gray-300 rounded-lg p-2" placeholder="Contoh: Maag / Tidak ada">
+                        </div>
+
+                        <label class="block text-sm font-bold text-gray-700 uppercase tracking-wide mb-4">
+                            Riwayat kesehatan fisik (dari kecil sampai dewasa) <span class="text-red-500">*</span>
+                        </label>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="flex items-start p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors md:col-span-2">
+                                <div class="flex items-center h-5">
+                                    <input id="riwayat_tidak_ada" name="riwayat_kesehatan_fisik" type="checkbox" value="Tidak ada" 
+                                        class="h-4 w-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500"
+                                        onchange="toggleRiwayatNone(this)">
+                                </div>
+                                <div class="ml-3 text-sm">
+                                    <label for="riwayat_tidak_ada" class="font-bold text-gray-800">Tidak ada</label>
+                                </div>
+                            </div>
+
+                            @php
+                                $riwayatList = [
+                                    'Riwayat sering sakit kepala berulang',
+                                    'Riwayat jatuh terbentur pada kepala',
+                                    'Riwayat kejang',
+                                    'Riwayat penyakit paru-paru',
+                                    'Riwayat batuk berulang/lama lebih dari 1 bulan',
+                                    'Riwayat penyakit asma/sesak',
+                                    'Riwayat sering pingsan',
+                                    'Riwayat operasi/dirawat di rumah sakit',
+                                    'Riwayat penyakit saluran pencernaan',
+                                    'Riwayat muntah darah',
+                                    'Riwayat berak darah',
+                                    'Riwayat batuk darah',
+                                    'Riwayat penyakit jantung',
+                                    'Riwayat keringat dingin tangan/kaki',
+                                    'Riwayat biru pada bibir/tangan/kaki',
+                                    'Riwayat demam berulang selama sekitar 2 bulan',
+                                    'Riwayat diare berulang selama sekitar 2 bulan',
+                                    'Riwayat sariawan berulang selama sekitar 2 bulan',
+                                    'Riwayat kesemutan yang berulang dan terus menerus',
+                                    'Riwayat gangguan pendengaran/telinga',
+                                    'Riwayat gangguan penglihatan/mata'
+                                ];
+                            @endphp
+
+                            @foreach($riwayatList as $index => $riwayat)
+                                <div class="flex items-start p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors checkbox-item">
+                                    <div class="flex items-center h-5">
+                                        <input id="riwayat_{{ $index }}" name="riwayat_kesehatan[]" type="checkbox" value="{{ $riwayat }}" 
+                                            class="h-4 w-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500">
+                                    </div>
+                                    <div class="ml-3 text-sm">
+                                        <label for="riwayat_{{ $index }}" class="font-medium text-gray-700">{{ $riwayat }}</label>
+                                    </div>
+                                </div>
+                            @endforeach
+
+                            <div class="md:col-span-2 p-3 bg-gray-50 rounded-lg">
+                                <div class="flex items-center mb-2">
+                                    <input id="riwayat_other_checkbox" type="checkbox" class="h-4 w-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500" onchange="toggleOtherInput(this)">
+                                    <label for="riwayat_other_checkbox" class="ml-3 text-sm font-medium text-gray-700">Other / Lainnya:</label>
+                                </div>
+                                <input type="text" id="riwayat_other_text" name="riwayat_kesehatan_other" placeholder="Sebutkan riwayat kesehatan lainnya jika ada..." 
+                                    class="w-full mt-1 p-2 text-sm border border-gray-300 rounded-lg bg-white focus:ring-indigo-500 focus:border-indigo-500 transition-all opacity-50" disabled>
+                            </div>
                         </div>
 
                         <div class="flex flex-col">
@@ -213,5 +295,91 @@
 
         tinggiInput.addEventListener('input', hitungIMT);
         beratInput.addEventListener('input', hitungIMT);
+
+        // Menaruh data fakultas & prodi dari controller ke dalam objek JavaScript (JSON)
+        const masterData = {!! json_encode($faculties) !!};
+
+        function updateProdi() {
+            const fakultasSelect = document.getElementById('select-fakultas');
+            const prodiSelect = document.getElementById('select-prodi');
+            const selectedFacultyId = fakultasSelect.value;
+
+            // Reset dropdown prodi
+            prodiSelect.innerHTML = '';
+
+            if (selectedFacultyId) {
+                // Cari data fakultas yang sesuai dari objek masterData
+                const activeFaculty = masterData.find(f => f.id == selectedFacultyId);
+
+                if (activeFaculty && activeFaculty.program_studis.length > 0) {
+                    prodiSelect.disabled = false;
+
+                    // Tambahkan opsi default prodi
+                    let defaultOpt = document.createElement('option');
+                    defaultOpt.value = "";
+                    defaultOpt.text = "-- Pilih Program Studi --";
+                    prodiSelect.appendChild(defaultOpt);
+
+                    // Looping program studi berdasarkan fakultas yang dipilih
+                    activeFaculty.program_studis.forEach(function(prodi) {
+                        let opt = document.createElement('option');
+                        // Menyusun teks prodi dengan format tingkatannya (Contoh: "S1 Teknik Informatika")
+                        const fullProdiName = `${prodi.level} ${prodi.name}`;
+                        
+                        opt.value = fullProdiName; // Bisa diganti prodi.id jika di backend butuh ID prodi-nya saja
+                        opt.text = fullProdiName;
+                        prodiSelect.appendChild(opt);
+                    });
+                } else {
+                    prodiSelect.disabled = true;
+                    let opt = document.createElement('option');
+                    opt.value = "";
+                    opt.text = "-- Tidak ada prodi tersedia --";
+                    prodiSelect.appendChild(opt);
+                }
+            } else {
+                prodiSelect.disabled = true;
+                let opt = document.createElement('option');
+                opt.value = "";
+                opt.text = "-- Pilih Fakultas Terlebih Dahulu --";
+                prodiSelect.appendChild(opt);
+            }
+        }
+
+        // Fungsi logika jika memilih "Tidak ada", maka opsi penyakit lain otomatis tidak aktif/tercentang
+    function toggleRiwayatNone(src) {
+        const checkboxes = document.querySelectorAll('.checkbox-item input[type="checkbox"]');
+        const otherCheckbox = document.getElementById('riwayat_other_checkbox');
+        const otherText = document.getElementById('riwayat_other_text');
+
+        if (src.checked) {
+            checkboxes.forEach(cb => {
+                cb.checked = false;
+                cb.disabled = true;
+            });
+            otherCheckbox.checked = false;
+            otherCheckbox.disabled = true;
+            otherText.value = '';
+            otherText.disabled = true;
+            otherText.classList.add('opacity-50');
+        } else {
+            checkboxes.forEach(cb => cb.disabled = false);
+            otherCheckbox.disabled = false;
+        }
+    }
+
+    // Fungsi logika mengaktifkan input teks teks jika checkbox "Other" dicentang
+    function toggleOtherInput(src) {
+        const otherText = document.getElementById('riwayat_other_text');
+        if (src.checked) {
+            otherText.disabled = false;
+            otherText.classList.remove('opacity-50');
+            otherText.focus();
+        } else {
+            otherText.disabled = true;
+            otherText.value = '';
+            otherText.classList.add('opacity-50');
+        }
+    }
     </script>
 </x-app-layout>

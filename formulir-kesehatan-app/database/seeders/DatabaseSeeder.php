@@ -16,6 +16,9 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+        $this->call([
+            FacultyAndProdiSeeder::class,
+        ]);
         // Membuat Akun Admin
         User::create([
             'name' => 'Administrator Utama',

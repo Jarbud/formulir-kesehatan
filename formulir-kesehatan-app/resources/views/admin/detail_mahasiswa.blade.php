@@ -42,12 +42,12 @@
                     </div>
                 @else
                     <div class="overflow-x-auto">
-                        <table class="w-full text-left border-collapse">
+                        <table id="riwayatTable" class="w-full text-left border-collapse">
                             <thead>
                                 <tr class="bg-gray-50 border-y border-gray-200 text-xs font-bold text-gray-500 uppercase tracking-wider">
                                     <th class="px-6 py-4">Tanggal</th>
                                     <th class="px-6 py-4">NIM</th>
-                                    <th class="px-6 py-4">Status Pembayaran</th>
+                                    <!-- <th class="px-6 py-4">Status Pembayaran</th> -->
                                     <th class="px-6 py-4">Bukti Pembayaran</th>
                                     <th class="px-6 py-4 text-center">Aksi</th>
                                 </tr>
@@ -61,7 +61,7 @@
                                         <td class="px-6 py-4 text-sm text-gray-700">
                                             {{ $riwayat->nim }}
                                         </td>
-                                        <td class="px-6 py-4">
+                                        <!-- <td class="px-6 py-4">
                                             @if($riwayat->status_pembayaran == 'pending')
                                                 <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">Belum Bayar</span>
                                             @elseif($riwayat->status_pembayaran == 'menunggu_verifikasi')
@@ -71,7 +71,7 @@
                                             @else
                                                 <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">{{ ucfirst($riwayat->status_pembayaran) }}</span>
                                             @endif
-                                        </td>
+                                        </td> -->
                                         <td class="px-6 py-4 text-sm font-medium">
                                             @if($riwayat->bukti_pembayaran)
                                                 <a href="{{ asset('storage/' . $riwayat->bukti_pembayaran) }}" target="_blank" class="text-blue-600 hover:text-blue-800 hover:underline">
@@ -82,10 +82,15 @@
                                             @endif
                                         </td>
                                         <td class="px-6 py-4 text-center">
-                                            <a href="{{ route('admin.cetak.formulir', $riwayat->id) }}" target="_blank" class="inline-flex items-center px-3 py-1.5 bg-indigo-50 text-indigo-700 hover:bg-indigo-100 border border-indigo-200 rounded-md text-xs font-bold transition">
-                                                Lihat PDF Formulir
-                                            </a>
-                                        </td>
+                                            <div class="flex flex-col items-center gap-2">
+                                                <a href="{{ route('admin.cetak.formulir', $riwayat->id) }}" target="_blank" class="w-full justify-center inline-flex items-center px-3 py-1.5 bg-indigo-50 text-indigo-700 hover:bg-indigo-100 border border-indigo-200 rounded-md text-xs font-bold transition">
+                                                    Lihat PDF Formulir
+                                                </a>
+                                                <a href="{{ secure_url(route('admin.export.excel', $riwayat->id)) }}" class="w-full justify-center inline-flex items-center px-3 py-1.5 bg-green-50 text-green-700 hover:bg-green-100 border border-green-200 rounded-md text-xs font-bold transition">
+                                                    Export Excel
+                                                </a>
+                                            </div>
+                                        </td> 
                                     </tr>
                                 @endforeach
                             </tbody>
@@ -94,5 +99,51 @@
                 @endif
             </div>
         </div>
+
+        <!-- CSS & JS untuk fitur Search, Sort, dan Filter (Simple DataTables) -->
+        <link href="https://cdn.jsdelivr.net/npm/simple-datatables@9.0.3/dist/style.min.css" rel="stylesheet">
+        <script src="https://cdn.jsdelivr.net/npm/simple-datatables@9.0.3"></script>
+        <style>
+            /* Custom CSS untuk merapikan Simple DataTables dengan Tailwind */
+            .dataTable-input, .dataTable-selector {
+                border: 1px solid #e5e7eb !important;
+                border-radius: 0.375rem !important;
+                padding: 0.375rem 0.75rem !important;
+                font-size: 0.875rem !important;
+                outline: none !important;
+            }
+            .datatable-selector {
+                width: 75px !important;
+                padding-right: 1.75rem !important; /* Ruang khusus agar angka tidak menabrak panah */
+            }
+            .dataTable-input:focus, .dataTable-selector:focus {
+                border-color: #3b82f6 !important;
+                box-shadow: 0 0 0 1px #3b82f6 !important;
+            }
+            .dataTable-pagination a {
+                border-radius: 0.375rem !important;
+            }
+            .dataTable-pagination .active a, .dataTable-pagination .active a:hover {
+                background-color: #3b82f6 !important;
+                color: white !important;
+            }
+        </style>
+        <script>
+            document.addEventListener("DOMContentLoaded", function() {
+                if (document.getElementById("riwayatTable") && typeof simpleDatatables.DataTable !== 'undefined') {
+                    new simpleDatatables.DataTable("#riwayatTable", {
+                        searchable: true,
+                        sortable: true,
+                        perPage: 5,
+                        labels: {
+                            placeholder: "Cari riwayat...",
+                            perPage: "data per halaman",
+                            noRows: "Tidak ada riwayat yang ditemukan",
+                            info: "Menampilkan {start} sampai {end} dari {rows} data",
+                        }
+                    });
+                }
+            });
+        </script>
     </div>
 </x-app-layout>

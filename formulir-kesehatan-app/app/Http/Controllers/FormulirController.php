@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\PemeriksaanKesehatan;
 use Illuminate\Support\Facades\Auth;
 use Barryvdh\DomPDF\Facade\Pdf;
+use App\Models\Faculty;
 
 class FormulirController extends Controller
 {
@@ -13,18 +14,43 @@ class FormulirController extends Controller
     public function index()
     {
         
-        return view('mahasiswa.formulir');
+        // Mengambil semua fakultas beserta program studinya dari database
+        $faculties = Faculty::with('programStudis')->get();
+        
+        // Mengirimkan data $faculties ke dalam view
+        return view('mahasiswa.formulir', compact('faculties'));
     }
 
     public function simpan(Request $request)
     {
+        $faculty = \App\Models\Faculty::find($request->fakultas);
+        $namaFakultas = $faculty ? $faculty->name : null;
         // 1. Validasi Input
         $request->validate([
             'tinggi_badan' => 'required|numeric',
             'berat_badan'  => 'required|numeric',
             'imt'          => 'required|numeric',
+            'alamat_asal'  => 'required|string',
+            'alamat_malang'=> 'required|string',
+            'wa'           => 'required|string',
+            'nama_wali'    => 'required|string',
+            'wa_wali'      => 'required|string',
             // Tambahkan validasi lain jika perlu
         ]);
+
+        // Memproses inputan riwayat kesehatan fisik dari checkbox menjadi string
+        $riwayatKesehatanArr = [];
+        if ($request->riwayat_kesehatan_fisik === 'Tidak ada') {
+            $riwayatKesehatanArr[] = 'Tidak ada';
+        } else {
+            if ($request->has('riwayat_kesehatan') && is_array($request->riwayat_kesehatan)) {
+                $riwayatKesehatanArr = $request->riwayat_kesehatan;
+            }
+            if ($request->has('riwayat_kesehatan_other') && !empty($request->riwayat_kesehatan_other)) {
+                $riwayatKesehatanArr[] = $request->riwayat_kesehatan_other;
+            }
+        }
+        $riwayatKesehatanFisik = empty($riwayatKesehatanArr) ? null : implode(', ', $riwayatKesehatanArr);
 
         try {
             // 2. Simpan ke Database
@@ -35,14 +61,20 @@ class FormulirController extends Controller
                 'nim'                   => $request->nim,
                 'jenis_kelamin'         => $request->jenis_kelamin,
                 'usia'                  => $request->usia,
-                'fakultas'              => $request->fakultas,
+                'fakultas'              => $namaFakultas,
                 'prodi'                 => $request->prodi,
                 'tempat_tanggal_lahir'  => $request->tempat_tanggal_lahir,
+                'alamat_asal'           => $request->alamat_asal,
+                'alamat_malang'         => $request->alamat_malang,
+                'wa'                    => $request->wa,
+                'nama_wali'             => $request->nama_wali,
+                'wa_wali'               => $request->wa_wali,
                 'disabilitas'           => $request->disabilitas,
                 'tinggi_badan'          => $request->tinggi_badan,
                 'berat_badan'           => $request->berat_badan,
                 'imt'                   => $request->imt,
                 'riwayat_sakit'         => $request->riwayat_sakit,
+                'riwayat_kesehatan_fisik' => $riwayatKesehatanFisik,
                 'keluhan'               => $request->keluhan,
             ]);
 

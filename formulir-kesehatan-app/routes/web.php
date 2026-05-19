@@ -23,10 +23,13 @@ Route::middleware('auth')->group(function () {
 // Route untuk Admin
 Route::middleware(['auth', 'checkRole:admin'])->group(function () {
     Route::get('/admin/dashboard', [DashboardController::class, 'adminDashboard'])->name('admin.dashboard');
+    Route::get('/admin/fakultas/{fakultas}', [DashboardController::class, 'mahasiswaByFakultas'])->name('admin.fakultas.mahasiswa');
     Route::get('/admin/mahasiswa/{id}', [DashboardController::class, 'detailMahasiswa'])->name('admin.mahasiswa.detail');
     
     // Route cetak PDF untuk Admin (menggunakan fungsi yang sama dari FormulirController)
     Route::get('/admin/cetak-formulir/{id}', [FormulirController::class, 'cetakPdf'])->name('admin.cetak.formulir');
+    Route::get('/admin/export-excel/{id}', [DashboardController::class, 'exportExcel'])->name('admin.export.excel');
+    Route::get('/admin/export-excel-all', [DashboardController::class, 'exportExcelAll'])->name('admin.export.excel.all');
 });
 
 // Route untuk Mahasiswa
