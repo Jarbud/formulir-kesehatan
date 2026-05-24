@@ -4,7 +4,7 @@
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
                 {{ __('Detail Mahasiswa: ') }} {{ $mahasiswa->name }}
             </h2>
-            <a href="{{ route('admin.dashboard') }}" class="px-4 py-2 bg-white border border-gray-300 hover:bg-gray-50 shadow-sm text-gray-700 text-sm font-bold rounded-md transition">
+            <a href="{{ route('dokter.dashboard') }}" class="px-4 py-2 bg-white border border-gray-300 hover:bg-gray-50 shadow-sm text-gray-700 text-sm font-bold rounded-md transition">
                 Kembali
             </a>
         </div>
@@ -13,6 +13,12 @@
     <div class="py-12 bg-gray-50 min-h-screen">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             
+            @if(session('success'))
+                <div class="mb-4 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative" role="alert">
+                    <span class="block sm:inline">{{ session('success') }}</span>
+                </div>
+            @endif
+
             <!-- Informasi Singkat Mahasiswa -->
             <div class="bg-white shadow-sm border border-gray-100 sm:rounded-xl p-6 mb-6">
                 <h3 class="text-lg font-bold mb-4 text-gray-900 border-b pb-2">Informasi Akun</h3>
@@ -49,7 +55,6 @@
                                     <th class="px-6 py-4">NIM</th>
                                     <!-- <th class="px-6 py-4">Status Pembayaran</th> -->
                                     <th class="px-6 py-4">Bukti Pembayaran</th>
-                                    <th class="px-6 py-4">Status Proses</th>
                                     <th class="px-6 py-4 text-center">Aksi</th>
                                 </tr>
                             </thead>
@@ -82,19 +87,15 @@
                                                 <span class="text-gray-400 italic">Belum Upload</span>
                                             @endif
                                         </td>
-                                        <td class="px-6 py-4 text-sm text-gray-700">
-                                            {{ $riwayat->status_proses }}
-                                        </td>
                                         <td class="px-6 py-4 text-center">
                                             <div class="flex flex-col items-center gap-2">
-                                                <a href="{{ route('admin.cetak.formulir', $riwayat->id) }}" 
-                                                target="_blank" 
-                                                class="w-full justify-center inline-flex items-center px-3 py-1.5 bg-indigo-50 text-indigo-700 hover:bg-indigo-100 border border-indigo-200 rounded-md text-xs font-bold transition">
+                                                <a href="{{ route('dokter.cetak.formulir', $riwayat->id) }}" target="_blank" class="w-full justify-center inline-flex items-center px-3 py-1.5 bg-indigo-50 text-indigo-700 hover:bg-indigo-100 border border-indigo-200 rounded-md text-xs font-bold transition">
                                                     Lihat PDF Formulir
                                                 </a>
-                                                <a href="{{ secure_url(route('admin.export.excel', $riwayat->id)) }}" class="w-full justify-center inline-flex items-center px-3 py-1.5 bg-green-50 text-green-700 hover:bg-green-100 border border-green-200 rounded-md text-xs font-bold transition">
-                                                    Export Excel
-                                                </a>
+                                                
+                                                <button type="button" onclick="openModal('modal-{{ $riwayat->id }}')" class="w-full justify-center inline-flex items-center px-3 py-1.5 bg-yellow-50 text-yellow-700 hover:bg-yellow-100 border border-yellow-200 rounded-md text-xs font-bold transition">
+                                                    Input Pemeriksaan
+                                                </button>
                                             </div>
                                         </td> 
                                     </tr>
@@ -102,6 +103,43 @@
                             </tbody>
                         </table>
                     </div>
+
+                    <!-- Kumpulan Modal Input Pemeriksaan -->
+                    @foreach($riwayats as $riwayat)
+                    <div id="modal-{{ $riwayat->id }}" class="fixed inset-0 z-50 hidden overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+                        <div class="flex items-end justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
+                            <div class="fixed inset-0 transition-opacity bg-gray-500 bg-opacity-75" aria-hidden="true" onclick="closeModal('modal-{{ $riwayat->id }}')"></div>
+                            <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+                            <div class="inline-block overflow-hidden text-left align-bottom transition-all transform bg-white rounded-lg shadow-xl sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
+                                <form action="{{ route('dokter.pemeriksaan.update', $riwayat->id) }}" method="POST">
+                                    @csrf
+                                    @method('PUT')
+                                    <div class="px-4 pt-5 pb-4 bg-white sm:p-6 sm:pb-4">
+                                        <h3 class="text-lg font-medium leading-6 text-gray-900" id="modal-title">Input Kesimpulan & Rekomendasi</h3>
+                                        
+                                        <div class="mt-4">
+                                            <label class="block text-sm font-medium text-gray-700 mb-2">Kesimpulan</label>
+                                            <div class="space-y-2">
+                                                <label class="inline-flex items-center w-full"><input type="radio" name="kesimpulan" value="Layak" {{ ($riwayat->kesimpulan ?? '') == 'Layak' ? 'checked' : '' }} class="w-4 h-4 text-indigo-600 border-gray-300 focus:ring-indigo-500" required><span class="ml-2 text-sm text-gray-700">Layak</span></label>
+                                                <label class="inline-flex items-center w-full"><input type="radio" name="kesimpulan" value="Layak dengan Syarat" {{ ($riwayat->kesimpulan ?? '') == 'Layak dengan Syarat' ? 'checked' : '' }} class="w-4 h-4 text-indigo-600 border-gray-300 focus:ring-indigo-500" required><span class="ml-2 text-sm text-gray-700">Layak dengan Syarat</span></label>
+                                                <label class="inline-flex items-center w-full"><input type="radio" name="kesimpulan" value="Tidak Layak Mengikuti PKKMB" {{ ($riwayat->kesimpulan ?? '') == 'Tidak Layak Mengikuti PKKMB' ? 'checked' : '' }} class="w-4 h-4 text-indigo-600 border-gray-300 focus:ring-indigo-500" required><span class="ml-2 text-sm text-gray-700">Tidak Layak Mengikuti PKKMB</span></label>
+                                            </div>
+                                        </div>
+
+                                        <div class="mt-4">
+                                            <label for="rekomendasi_{{ $riwayat->id }}" class="block text-sm font-medium text-gray-700">Rekomendasi</label>
+                                            <textarea name="rekomendasi" id="rekomendasi_{{ $riwayat->id }}" rows="3" class="block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">{{ $riwayat->rekomendasi ?? '' }}</textarea>
+                                        </div>
+                                    </div>
+                                    <div class="px-4 py-3 bg-gray-50 sm:px-6 sm:flex sm:flex-row-reverse">
+                                        <button type="submit" class="inline-flex justify-center w-full px-4 py-2 text-base font-medium text-white bg-indigo-600 border border-transparent rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:ml-3 sm:w-auto sm:text-sm">Simpan</button>
+                                        <button type="button" onclick="closeModal('modal-{{ $riwayat->id }}')" class="inline-flex justify-center w-full px-4 py-2 mt-3 text-base font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">Batal</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    @endforeach
                 @endif
             </div>
         </div>
@@ -150,6 +188,15 @@
                     });
                 }
             });
+        </script>
+        <script>
+            function openModal(id) {
+                document.getElementById(id).classList.remove('hidden');
+            }
+
+            function closeModal(id) {
+                document.getElementById(id).classList.add('hidden');
+            }
         </script>
     </div>
 </x-app-layout>

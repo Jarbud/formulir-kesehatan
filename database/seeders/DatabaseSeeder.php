@@ -16,6 +16,9 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+        $this->call([
+            FacultyAndProdiSeeder::class,
+        ]);
         // Membuat Akun Admin
         User::create([
             'name' => 'Administrator Utama',
@@ -31,7 +34,23 @@ class DatabaseSeeder extends Seeder
             'password' => Hash::make('password123'),
             'role' => 'mahasiswa',
         ]);
+
+        // Membuat Akun Perawat (untuk testing)
+        User::create([
+            'name' => 'Siti Perawat',
+            'email' => 'perawat@mail.com',
+            'password' => Hash::make('password123'),
+            'role' => 'perawat',
+        ]);
         
-        echo "Seeder berhasil: Akun Admin & Mahasiswa telah dibuat.\n";
+        // Membuat Akun Dokter (untuk testing)
+        User::create([
+            'name' => 'Budi Dokter',
+            'email' => 'dokter@mail.com',
+            'password' => Hash::make('password123'),
+            'role' => 'dokter',
+        ]);
+        
+        echo "Seeder berhasil: Akun Admin, Mahasiswa, Perawat & Dokter telah dibuat.\n";
     }
 }

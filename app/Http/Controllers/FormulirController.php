@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\PemeriksaanKesehatan;
 use Illuminate\Support\Facades\Auth;
 use Barryvdh\DomPDF\Facade\Pdf;
+use App\Models\Faculty;
 
 class FormulirController extends Controller
 {
@@ -13,18 +14,43 @@ class FormulirController extends Controller
     public function index()
     {
         
-        return view('mahasiswa.formulir');
+        // Mengambil semua fakultas beserta program studinya dari database
+        $faculties = Faculty::with('programStudis')->get();
+        
+        // Mengirimkan data $faculties ke dalam view
+        return view('mahasiswa.formulir', compact('faculties'));
     }
 
     public function simpan(Request $request)
     {
+        $faculty = \App\Models\Faculty::find($request->fakultas);
+        $namaFakultas = $faculty ? $faculty->name : null;
         // 1. Validasi Input
         $request->validate([
             'tinggi_badan' => 'required|numeric',
             'berat_badan'  => 'required|numeric',
             'imt'          => 'required|numeric',
+            'alamat_asal'  => 'required|string',
+            'alamat_malang'=> 'required|string',
+            'wa'           => 'required|string',
+            'nama_wali'    => 'required|string',
+            'wa_wali'      => 'required|string',
             // Tambahkan validasi lain jika perlu
         ]);
+
+        // Memproses inputan riwayat kesehatan fisik dari checkbox menjadi string
+        $riwayatKesehatanArr = [];
+        if ($request->riwayat_kesehatan_fisik === 'Tidak ada') {
+            $riwayatKesehatanArr[] = 'Tidak ada';
+        } else {
+            if ($request->has('riwayat_kesehatan') && is_array($request->riwayat_kesehatan)) {
+                $riwayatKesehatanArr = $request->riwayat_kesehatan;
+            }
+            if ($request->has('riwayat_kesehatan_other') && !empty($request->riwayat_kesehatan_other)) {
+                $riwayatKesehatanArr[] = $request->riwayat_kesehatan_other;
+            }
+        }
+        $riwayatKesehatanFisik = empty($riwayatKesehatanArr) ? null : implode(', ', $riwayatKesehatanArr);
 
         try {
             // 2. Simpan ke Database
@@ -35,15 +61,22 @@ class FormulirController extends Controller
                 'nim'                   => $request->nim,
                 'jenis_kelamin'         => $request->jenis_kelamin,
                 'usia'                  => $request->usia,
-                'fakultas'              => $request->fakultas,
+                'fakultas'              => $namaFakultas,
                 'prodi'                 => $request->prodi,
                 'tempat_tanggal_lahir'  => $request->tempat_tanggal_lahir,
+                'alamat_asal'           => $request->alamat_asal,
+                'alamat_malang'         => $request->alamat_malang,
+                'wa'                    => $request->wa,
+                'nama_wali'             => $request->nama_wali,
+                'wa_wali'               => $request->wa_wali,
                 'disabilitas'           => $request->disabilitas,
                 'tinggi_badan'          => $request->tinggi_badan,
                 'berat_badan'           => $request->berat_badan,
                 'imt'                   => $request->imt,
                 'riwayat_sakit'         => $request->riwayat_sakit,
+                'riwayat_kesehatan_fisik' => $riwayatKesehatanFisik,
                 'keluhan'               => $request->keluhan,
+                'status_proses'         => 'perawat',
             ]);
 
             // 3. Redirect ke halaman pembayaran (sesuai teks tombol 'Simpan & Bayar')
@@ -86,37 +119,34 @@ class FormulirController extends Controller
 
     public function cetakPdf($id)
     {
-        // 1. Ambil data dari database (contoh menggunakan data dummy agar sesuai gambar)
+        // 1. Ambil data dari database
         $data = PemeriksaanKesehatan::findOrFail($id); 
         
-        // $data = [
-        //     'jadwal' => '6 Agustus 2025',
-        //     'nama' => 'Abednego Yekti Bekti',
-        //     'jk' => 'Laki-laki',
-        //     'nim' => '250611600312',
-        //     'ttl' => 'Tulungagung, 12-10-2006',
-        //     'usia' => 18,
-        //     'fakultas' => 'FIK/ Pendidikan Jasmani, Kesehatan dan Rekreasi',
-        //     'disabilitas' => 'Tidak ada',
-        //     'tb' => '173',
-        //     'bb' => '78',
-        //     'imt' => '26.1',
-        //     'status_imt' => 'Overweight',
-        //     'tensi' => '141/70',
-        //     'ishihara' => '(-)',
-        //     'riwayat_sakit' => 'Maag',
-        //     'keluhan' => 'Tidak ada',
-        //     'kesimpulan' => 'Layak',
-        // ];
+        // Ubah string status menjadi huruf kecil semua untuk menghindari typo seperti 'Perawat' atau 'PERAWAT'
+        $status = strtolower($data->status_proses);
 
-        // 2. Load view blade dan passing data
-        $pdf = Pdf::loadView('mahasiswa.pdf.formulir_kesehatan', compact('data'));
+        // 2. Tentukan view berdasarkan status
+        if ($status === 'dokter') {
+            $viewPath = 'perawat.pdf.formulir_kesehatan';
+        } 
+        elseif ($status === 'admin') {
+            $viewPath = 'dokter.pdf.formulir_kesehatan';
+        } 
+        elseif ($status === 'selesai') {
+            $viewPath = 'selesai.pdf.formulir_kesehatan';
+        } 
+        else {
+            // JIKA STATUS TIDAK DIKENALI (misal null atau 'admin'), arahkan ke view default ini
+            $viewPath = 'perawat.pdf.formulir_kesehatan';
+        }
 
-        // Set ukuran kertas (A4, portrait)
+        // Eksekusi loadView di luar IF agar variabel $pdf DIJAMIN selalu terbuat dan tidak null
+        $pdf = Pdf::loadView($viewPath, compact('data'));
+
+        // Set ukuran kertas (Sekarang baris ini dijamin aman dari error member function on null)
         $pdf->setPaper('A4', 'portrait');
 
-        // 3. Return stream (untuk melihat di browser) atau download (langsung unduh)
-        // return $pdf->download('Formulir_Kesehatan_'.$data['nim'].'.pdf'); 
+        // 3. Return stream
         return $pdf->stream('Formulir_Kesehatan_'.$data['nim'].'.pdf'); 
     }
 }

@@ -24,22 +24,23 @@
                     <!-- Ganti logo.png dengan asset Anda -->
                     <img src="{{ asset('images/logo-kecil.png') }}" alt="Logo UM" class="h-12 w-auto" onerror="this.src='https://upload.wikimedia.org/wikipedia/id/thumb/7/7e/Logo_Universitas_Negeri_Malang.png/200px-Logo_Universitas_Negeri_Malang.png'">
                     <div>
-                        <h1 class="text-blue-900 font-bold leading-none text-lg">KLINIK PRATAMA</h1>
-                        <p class="text-blue-700 text-xs font-semibold tracking-wider">UNIVERSITAS NEGERI MALANG</p>
+                        <h1 class="text-blue-900 font-bold leading-none text-base md:text-lg">KLINIK PRATAMA</h1>
+                        <p class="text-blue-700 text-[10px] md:text-xs font-semibold tracking-wider hidden sm:block">UNIVERSITAS NEGERI MALANG</p>
                     </div>
                 </div>
 
                 <!-- Navigation Links -->
-                <nav class="hidden md:flex items-center space-x-8">
+                <nav class="flex items-center">
                     @if (Route::has('login'))
-                        <div class="flex items-center space-x-4">
+                        <div class="flex items-center space-x-3 md:space-x-4">
                             @auth
-                                <a href="{{ url('/dashboard') }}" class="font-semibold text-blue-600 hover:text-blue-800 transition">Dashboard</a>
+                                <a href="{{ url('/dashboard') }}" class="font-semibold text-blue-600 hover:text-blue-800 transition text-sm md:text-base">Dashboard</a>
                             @else
-                                <a href="{{ route('login') }}" class="font-semibold text-gray-600 hover:text-blue-600 transition">Masuk</a>
+                                <a href="{{ route('login') }}" class="font-semibold text-gray-600 hover:text-blue-600 transition text-sm md:text-base">Masuk</a>
                                 @if (Route::has('register'))
-                                    <a href="{{ route('register') }}" class="bg-blue-900 text-white px-5 py-2 rounded-full font-semibold hover:bg-blue-800 transition shadow-md shadow-blue-200">
-                                        Registrasi Mahasiswa
+                                    <a href="{{ route('register') }}" class="bg-blue-900 text-white px-4 py-2 md:px-5 md:py-2 rounded-full font-semibold hover:bg-blue-800 transition shadow-md shadow-blue-200 text-xs md:text-base whitespace-nowrap">
+                                        <span class="hidden sm:inline">Registrasi Mahasiswa</span>
+                                        <span class="sm:hidden">Daftar</span>
                                     </a>
                                 @endif
                             @endauth

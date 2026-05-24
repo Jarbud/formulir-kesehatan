@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Perawat;
 
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -11,52 +12,50 @@ use App\Models\PemeriksaanKesehatan;
 class DashboardController extends Controller
 {
     //
-    public function index()
-    {
-        $role = Auth::user()->role;
-
-        if ($role === 'admin') {
-            return redirect()->route('admin.dashboard');
-        } 
-        
-        if ($role === 'mahasiswa') {
-            return view('mahasiswa.dashboard');
-        }
-
-        if ($role === 'perawat') {
-            return redirect()->route('perawat.dashboard');
-        }
-
-        if ($role === 'dokter') {
-            return redirect()->route('dokter.dashboard');
-        }
-
-        // Jika role tidak dikenali, kembalikan ke halaman utama atau logout
-        return redirect('/');
-    }
-
     public function adminDashboard()
     {
         // Mengelompokkan data berdasarkan fakultas dari tabel pemeriksaan_kesehatans
         $fakultas = PemeriksaanKesehatan::select('fakultas', DB::raw('count(distinct user_id) as total_mahasiswa'))
+            ->where('status_proses', 'perawat')
             ->groupBy('fakultas')
             ->get();
 
-        return view('admin.dashboard', compact('fakultas'));
+        return view('perawat.dashboard', compact('fakultas'));
     }
 
     public function mahasiswaByFakultas($fakultas)
     {
-        // Mengambil mahasiswa yang mengajukan pemeriksaan di fakultas tersebut
-        $pemeriksaans = PemeriksaanKesehatan::where('fakultas', $fakultas)->latest()->get()->unique('user_id');
-        return view('admin.mahasiswa_fakultas', compact('pemeriksaans', 'fakultas'));
+        // Mengambil mahasiswa yang mengajukan pemeriksaan di fakultas tersebut dan berstatus 'perawat'
+        $pemeriksaans = PemeriksaanKesehatan::where('fakultas', $fakultas)
+            ->where('status_proses', 'perawat') // Menambahkan filter status_proses
+            ->latest()
+            ->get()
+            ->unique('user_id');
+
+        return view('perawat.mahasiswa_fakultas', compact('pemeriksaans', 'fakultas'));
     }
 
     public function detailMahasiswa($id)
     {
         $mahasiswa = User::findOrFail($id);
-        $riwayats = PemeriksaanKesehatan::where('user_id', $id)->orderBy('created_at', 'desc')->get();
-        return view('admin.detail_mahasiswa', compact('mahasiswa', 'riwayats'));
+        $riwayats = PemeriksaanKesehatan::where('user_id', $id)->where('status_proses', 'perawat')->orderBy('created_at', 'desc')->get();
+        return view('perawat.detail_mahasiswa', compact('mahasiswa', 'riwayats'));
+    }
+
+    public function updatePemeriksaan(Request $request, $id)
+    {
+        $request->validate([
+            'tekanan_darah' => 'required',
+            'ishihara' => 'required|in:+,-,parsial',
+        ]);
+
+        $pemeriksaan = PemeriksaanKesehatan::findOrFail($id);
+        $pemeriksaan->tekanan_darah = $request->tekanan_darah;
+        $pemeriksaan->ishihara = $request->ishihara;
+        $pemeriksaan->status_proses = 'dokter';
+        $pemeriksaan->save();
+
+        return redirect()->back()->with('success', 'Data pemeriksaan berhasil diperbarui.');
     }
 
     public function exportExcel($id)

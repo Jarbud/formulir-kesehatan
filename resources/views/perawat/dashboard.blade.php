@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Admin Dashboard') }}
+            {{ __('Perawat Dashboard') }}
         </h2>
     </x-slot>
 
@@ -11,7 +11,7 @@
                 <div class="p-6 text-gray-900">
                     <div class="flex items-center justify-between mb-6">
                         <h3 class="text-lg font-bold text-gray-900">Daftar Fakultas (Pengajuan Pemeriksaan)</h3>
-                        <a href="{{ route('admin.export.excel.all') }}" class="inline-flex items-center px-4 py-2 bg-green-600 text-white hover:bg-green-700 border border-transparent rounded-md text-sm font-bold transition shadow-sm">
+                        <a href="{{ route('perawat.export.excel.all') }}" class="inline-flex items-center px-4 py-2 bg-green-600 text-white hover:bg-green-700 border border-transparent rounded-md text-sm font-bold transition shadow-sm">
                             <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
                             Export Semua Data
                         </a>
@@ -42,7 +42,7 @@
                                             </span>
                                         </td>
                                         <td class="px-6 py-4 text-center">
-                                            <a href="{{ route('admin.fakultas.mahasiswa', ['fakultas' => $item->fakultas]) }}" class="inline-flex items-center px-4 py-2 bg-blue-50 text-blue-700 hover:bg-blue-100 border border-blue-200 rounded-md text-xs font-bold transition">
+                                            <a href="{{ route('perawat.fakultas.mahasiswa', ['fakultas' => $item->fakultas]) }}" class="inline-flex items-center px-4 py-2 bg-blue-50 text-blue-700 hover:bg-blue-100 border border-blue-200 rounded-md text-xs font-bold transition">
                                                 Lihat Mahasiswa
                                             </a>
                                         </td>

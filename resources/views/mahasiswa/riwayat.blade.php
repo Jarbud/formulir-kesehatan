@@ -40,7 +40,7 @@
                                         <th class="px-6 py-4">Nama Lengkap</th>
                                         <th class="px-6 py-4">NIM</th>
                                         <!-- <th class="px-6 py-4">Status Pembayaran</th> -->
-                                        <th class="px-6 py-4 text-center">Aksi</th>
+                                        <!-- <th class="px-6 py-4 text-center">Aksi</th> -->
                                     </tr>
                                 </thead>
                                 <tbody class="divide-y divide-gray-100">
@@ -74,11 +74,11 @@
                                                     </span>
                                                 @endif
                                             </td> -->
-                                            <td class="px-6 py-4 text-center">
+                                            <!-- <td class="px-6 py-4 text-center">
                                                 <a href="{{ route('cetak.formulir', $riwayat->id) }}" target="_blank" class="text-blue-600 hover:text-blue-900 font-semibold text-sm inline-flex items-center">
                                                     <i data-lucide="eye" class="w-4 h-4 mr-1"></i> Lihat PDF
                                                 </a>
-                                            </td>
+                                            </td> -->
                                         </tr>
                                     @endforeach
                                 </tbody>

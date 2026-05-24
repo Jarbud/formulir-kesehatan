@@ -4,6 +4,10 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\FormulirController;
+use App\Http\Controllers\Perawat\DashboardController as PerawatDashboardController;
+use App\Http\Controllers\Perawat\FormulirController as PerawatFormulirController;
+use App\Http\Controllers\Dokter\DashboardController as DokterDashboardController;
+use App\Http\Controllers\Dokter\FormulirController as DokterFormulirController;
 
 
 Route::get('/', function () {
@@ -23,10 +27,37 @@ Route::middleware('auth')->group(function () {
 // Route untuk Admin
 Route::middleware(['auth', 'checkRole:admin'])->group(function () {
     Route::get('/admin/dashboard', [DashboardController::class, 'adminDashboard'])->name('admin.dashboard');
+    Route::get('/admin/fakultas/{fakultas}', [DashboardController::class, 'mahasiswaByFakultas'])->name('admin.fakultas.mahasiswa');
     Route::get('/admin/mahasiswa/{id}', [DashboardController::class, 'detailMahasiswa'])->name('admin.mahasiswa.detail');
     
     // Route cetak PDF untuk Admin (menggunakan fungsi yang sama dari FormulirController)
     Route::get('/admin/cetak-formulir/{id}', [FormulirController::class, 'cetakPdf'])->name('admin.cetak.formulir');
+    Route::get('/admin/export-excel/{id}', [DashboardController::class, 'exportExcel'])->name('admin.export.excel');
+    Route::get('/admin/export-excel-all', [DashboardController::class, 'exportExcelAll'])->name('admin.export.excel.all');
+});
+
+// Route untuk Perawat
+Route::middleware(['auth', 'checkRole:perawat'])->group(function () {
+    Route::get('/perawat/dashboard', [PerawatDashboardController::class, 'adminDashboard'])->name('perawat.dashboard');
+    Route::get('/perawat/fakultas/{fakultas}', [PerawatDashboardController::class, 'mahasiswaByFakultas'])->name('perawat.fakultas.mahasiswa');
+    Route::get('/perawat/mahasiswa/{id}', [PerawatDashboardController::class, 'detailMahasiswa'])->name('perawat.mahasiswa.detail');
+    
+    Route::get('/perawat/cetak-formulir/{id}', [PerawatFormulirController::class, 'cetakPdf'])->name('perawat.cetak.formulir');
+    Route::get('/perawat/export-excel/{id}', [PerawatDashboardController::class, 'exportExcel'])->name('perawat.export.excel');
+    Route::get('/perawat/export-excel-all', [PerawatDashboardController::class, 'exportExcelAll'])->name('perawat.export.excel.all');
+    Route::put('/perawat/pemeriksaan/{id}', [PerawatDashboardController::class, 'updatePemeriksaan'])->name('perawat.pemeriksaan.update');
+});
+
+// Route untuk Dokter
+Route::middleware(['auth', 'checkRole:dokter'])->group(function () {
+    Route::get('/dokter/dashboard', [DokterDashboardController::class, 'adminDashboard'])->name('dokter.dashboard');
+    Route::get('/dokter/fakultas/{fakultas}', [DokterDashboardController::class, 'mahasiswaByFakultas'])->name('dokter.fakultas.mahasiswa');
+    Route::get('/dokter/mahasiswa/{id}', [DokterDashboardController::class, 'detailMahasiswa'])->name('dokter.mahasiswa.detail');
+    
+    Route::get('/dokter/cetak-formulir/{id}', [DokterFormulirController::class, 'cetakPdf'])->name('dokter.cetak.formulir');
+    Route::get('/dokter/export-excel/{id}', [DokterDashboardController::class, 'exportExcel'])->name('dokter.export.excel');
+    Route::get('/dokter/export-excel-all', [DokterDashboardController::class, 'exportExcelAll'])->name('dokter.export.excel.all');
+    Route::put('/dokter/pemeriksaan/{id}', [DokterDashboardController::class, 'updatePemeriksaan'])->name('dokter.pemeriksaan.update');
 });
 
 // Route untuk Mahasiswa
