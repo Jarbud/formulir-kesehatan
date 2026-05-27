@@ -53,6 +53,9 @@ class DashboardController extends Controller
         $pemeriksaan->tekanan_darah = $request->tekanan_darah;
         $pemeriksaan->ishihara = $request->ishihara;
         $pemeriksaan->status_proses = 'dokter';
+
+        // Mengambil ID user (perawat) yang sedang login saat ini
+        $pemeriksaan->id_perawat_acc = Auth::id();
         $pemeriksaan->save();
 
         return redirect()->back()->with('success', 'Data pemeriksaan berhasil diperbarui.');

@@ -52,6 +52,11 @@ return new class extends Migration
             // Menambahkan kolom rekomendasi berupa text dan boleh kosong (nullable)
             $table->text('rekomendasi')->nullable()->after('kesimpulan');
             
+            // === TAMBAHAN KOLOM BARU ===
+            // Menghubungkan ke kolom id di tabel users secara opsional (nullable)
+            $table->foreignId('id_perawat_acc')->nullable()->constrained('users')->onDelete('set null');
+            $table->foreignId('id_dokter_acc')->nullable()->constrained('users')->onDelete('set null');
+
             $table->string('status_pembayaran')->default('pending'); // Karena ada tombol 'Simpan & Bayar'
             $table->timestamps();
         });

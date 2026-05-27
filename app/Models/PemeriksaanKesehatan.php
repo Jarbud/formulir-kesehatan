@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class PemeriksaanKesehatan extends Model
 {
@@ -14,4 +15,16 @@ class PemeriksaanKesehatan extends Model
         'status_pembayaran', 'bukti_pembayaran',
         'kesimpulan', 'rekomendasi'
     ];
+
+    // Relasi ke Perawat yang melakukan ACC
+    public function perawat(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'id_perawat_acc');
+    }
+
+    // Relasi ke Dokter yang melakukan ACC
+    public function dokter(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'id_dokter_acc');
+    }
 }

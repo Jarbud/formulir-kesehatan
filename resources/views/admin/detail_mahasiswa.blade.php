@@ -13,6 +13,12 @@
     <div class="py-12 bg-gray-50 min-h-screen">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             
+            @if(session('success'))
+                <div class="mb-4 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative" role="alert">
+                    <span class="block sm:inline">{{ session('success') }}</span>
+                </div>
+            @endif
+
             <!-- Informasi Singkat Mahasiswa -->
             <div class="bg-white shadow-sm border border-gray-100 sm:rounded-xl p-6 mb-6">
                 <h3 class="text-lg font-bold mb-4 text-gray-900 border-b pb-2">Informasi Akun</h3>
@@ -41,60 +47,72 @@
                         Mahasiswa ini belum pernah mengajukan formulir pemeriksaan kesehatan.
                     </div>
                 @else
-                    <div class="overflow-x-auto">
-                        <table id="riwayatTable" class="w-full text-left border-collapse">
+                    <div class="w-full overflow-x-auto rounded-lg border border-gray-200 shadow-sm">
+                        <table id="riwayatTable" class="w-full text-left border-collapse min-w-[1000px]"> {{-- Berikan minimal lebar statis agar tidak penyok --}}
                             <thead>
-                                <tr class="bg-gray-50 border-y border-gray-200 text-xs font-bold text-gray-500 uppercase tracking-wider">
-                                    <th class="px-6 py-4">Tanggal</th>
-                                    <th class="px-6 py-4">NIM</th>
-                                    <!-- <th class="px-6 py-4">Status Pembayaran</th> -->
-                                    <th class="px-6 py-4">Bukti Pembayaran</th>
-                                    <th class="px-6 py-4">Status Proses</th>
-                                    <th class="px-6 py-4 text-center">Aksi</th>
+                                <tr class="bg-gray-50 border-b border-gray-200 text-xs font-bold text-gray-500 uppercase tracking-wider">
+                                    <th class="px-6 py-4 w-[15%]">Tanggal</th>
+                                    <th class="px-6 py-4 w-[12%]">NIM</th>
+                                    <th class="px-6 py-4 w-[15%]">Bukti Pembayaran</th>
+                                    <th class="px-6 py-4 w-[13%]">Status Proses</th>
+                                    <th class="px-6 py-4 w-[20%]">Tenaga Kesehatan</th> {{-- Dipersingkat judulnya agar tidak memakan space --}}
+                                    <th class="px-6 py-4 w-[15%]">Dokter</th>
+                                    <th class="px-6 py-4 text-center w-[10%]">Aksi</th>
                                 </tr>
                             </thead>
                             <tbody class="divide-y divide-gray-100">
                                 @foreach($riwayats as $riwayat)
-                                    <tr class="hover:bg-gray-50 transition">
-                                        <td class="px-6 py-4 text-sm text-gray-900 font-medium">
+                                    <tr class="hover:bg-gray-50/70 transition">
+                                        <td class="px-6 py-4 text-sm text-gray-900 font-medium whitespace-nowrap">
                                             {{ $riwayat->created_at->format('d M Y, H:i') }}
                                         </td>
-                                        <td class="px-6 py-4 text-sm text-gray-700">
+                                        <td class="px-6 py-4 text-sm text-gray-700 whitespace-nowrap">
                                             {{ $riwayat->nim }}
                                         </td>
-                                        <!-- <td class="px-6 py-4">
-                                            @if($riwayat->status_pembayaran == 'pending')
-                                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">Belum Bayar</span>
-                                            @elseif($riwayat->status_pembayaran == 'menunggu_verifikasi')
-                                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">Menunggu Verifikasi</span>
-                                            @elseif($riwayat->status_pembayaran == 'lunas')
-                                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">Lunas</span>
-                                            @else
-                                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">{{ ucfirst($riwayat->status_pembayaran) }}</span>
-                                            @endif
-                                        </td> -->
-                                        <td class="px-6 py-4 text-sm font-medium">
+                                        <td class="px-6 py-4 text-sm font-medium whitespace-nowrap">
                                             @if($riwayat->bukti_pembayaran)
-                                                <a href="{{ asset('storage/' . $riwayat->bukti_pembayaran) }}" target="_blank" class="text-blue-600 hover:text-blue-800 hover:underline">
+                                                <a href="{{ asset('storage/' . $riwayat->bukti_pembayaran) }}" target="_blank" class="text-blue-600 hover:text-blue-800 hover:underline inline-flex items-center gap-1">
                                                     Lihat File Bukti
                                                 </a>
                                             @else
                                                 <span class="text-gray-400 italic">Belum Upload</span>
                                             @endif
                                         </td>
-                                        <td class="px-6 py-4 text-sm text-gray-700">
+                                        <td class="px-6 py-4 text-sm text-gray-700 uppercase tracking-wide font-semibold text-xs">
                                             {{ $riwayat->status_proses }}
                                         </td>
+                                        <td class="px-6 py-4 text-sm text-gray-600 font-medium max-w-[200px] truncate" title="{{ $riwayat->id_perawat_acc ? $riwayat->perawat->name : '' }}">
+                                            @if($riwayat->id_perawat_acc)
+                                                {{ $riwayat->perawat->name }}
+                                            @else
+                                                <span class="text-gray-400 italic font-normal">Belum Diperiksa</span>
+                                            @endif
+                                        </td>
+                                        <td class="px-6 py-4 text-sm text-gray-600 font-medium max-w-[150px] truncate" title="{{ $riwayat->id_dokter_acc ? $riwayat->dokter->name : '' }}">
+                                            @if($riwayat->id_dokter_acc)
+                                                {{ $riwayat->dokter->name }}
+                                            @else
+                                                <span class="text-gray-400 italic font-normal">Belum Diperiksa</span>
+                                            @endif
+                                        </td>
                                         <td class="px-6 py-4 text-center">
-                                            <div class="flex flex-col items-center gap-2">
+                                            {{-- Menggunakan flex row agar tombol berjejer rapi ke samping, bukan numpuk vertikal --}}
+                                            <div class="flex flex-col items-center justify-center gap-2 whitespace-nowrap">
                                                 <a href="{{ route('admin.cetak.formulir', $riwayat->id) }}" 
                                                 target="_blank" 
                                                 class="w-full justify-center inline-flex items-center px-3 py-1.5 bg-indigo-50 text-indigo-700 hover:bg-indigo-100 border border-indigo-200 rounded-md text-xs font-bold transition">
-                                                    Lihat PDF Formulir
+                                                    Lihat PDF
                                                 </a>
-                                                <a href="{{ secure_url(route('admin.export.excel', $riwayat->id)) }}" class="w-full justify-center inline-flex items-center px-3 py-1.5 bg-green-50 text-green-700 hover:bg-green-100 border border-green-200 rounded-md text-xs font-bold transition">
+                                                <a href="{{ secure_url(route('admin.export.excel', $riwayat->id)) }}" 
+                                                class="w-full justify-center inline-flex items-center px-3 py-1.5 bg-green-50 text-green-700 hover:bg-green-100 border border-green-200 rounded-md text-xs font-bold transition">
                                                     Export Excel
                                                 </a>
+                                                @if($riwayat->status_proses == 'admin')
+                                                <button type="button" onclick="openModal('modal-ttd-{{ $riwayat->id }}')" 
+                                                class="w-full justify-center inline-flex items-center px-3 py-1.5 bg-purple-50 text-purple-700 hover:bg-purple-100 border border-purple-200 rounded-md text-xs font-bold transition">
+                                                    TTD
+                                                </button>
+                                                @endif
                                             </div>
                                         </td> 
                                     </tr>
@@ -102,6 +120,34 @@
                             </tbody>
                         </table>
                     </div>
+
+                    <!-- Kumpulan Modal TTD -->
+                    @foreach($riwayats as $riwayat)
+                        @if($riwayat->status_proses !== 'selesai')
+                        <div id="modal-ttd-{{ $riwayat->id }}" class="fixed inset-0 z-50 hidden overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+                            <div class="flex items-end justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
+                                <div class="fixed inset-0 transition-opacity bg-gray-500 bg-opacity-75" aria-hidden="true" onclick="closeModal('modal-ttd-{{ $riwayat->id }}')"></div>
+                                <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+                                <div class="inline-block overflow-hidden text-left align-bottom transition-all transform bg-white rounded-lg shadow-xl sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
+                                    <form action="{{ route('admin.pemeriksaan.ttd', $riwayat->id) }}" method="POST">
+                                        @csrf
+                                        @method('PUT')
+                                        <div class="px-4 pt-5 pb-4 bg-white sm:p-6 sm:pb-4">
+                                            <h3 class="text-lg font-medium leading-6 text-gray-900" id="modal-title">Konfirmasi Tanda Tangan</h3>
+                                            <div class="mt-2">
+                                                <p class="text-sm text-gray-500">Apakah Anda yakin ingin menandatangani dan menyelesaikan dokumen pemeriksaan ini?</p>
+                                            </div>
+                                        </div>
+                                        <div class="px-4 py-3 bg-gray-50 sm:px-6 sm:flex sm:flex-row-reverse">
+                                            <button type="submit" class="inline-flex justify-center w-full px-4 py-2 text-base font-medium text-white bg-purple-600 border border-transparent rounded-md shadow-sm hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 sm:ml-3 sm:w-auto sm:text-sm">Iya, Tandatangani</button>
+                                            <button type="button" onclick="closeModal('modal-ttd-{{ $riwayat->id }}')" class="inline-flex justify-center w-full px-4 py-2 mt-3 text-base font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">Tidak</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        @endif
+                    @endforeach
                 @endif
             </div>
         </div>
@@ -150,6 +196,15 @@
                     });
                 }
             });
+        </script>
+        <script>
+            function openModal(id) {
+                document.getElementById(id).classList.remove('hidden');
+            }
+
+            function closeModal(id) {
+                document.getElementById(id).classList.add('hidden');
+            }
         </script>
     </div>
 </x-app-layout>

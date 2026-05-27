@@ -15,6 +15,17 @@
                     <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                         {{ __('Dashboard') }}
                     </x-nav-link>
+                    @if(Auth::user()->role === 'admin')
+                        <x-nav-link :href="route('admin.users.index')" :active="request()->routeIs('admin.users.*')">
+                            {{ __('Kelola Akun') }}
+                        </x-nav-link>
+                        <x-nav-link :href="route('admin.laporan.index')" :active="request()->routeIs('admin.laporan.*')">
+                            {{ __('Laporan') }}
+                        </x-nav-link>
+                        <x-nav-link :href="route('admin.rangkuman')" :active="request()->routeIs('admin.rangkuman')">
+                            {{ __('Rangkuman Pemeriksaan') }}
+                        </x-nav-link>
+                    @endif
                 </div>
             </div>
 
@@ -70,6 +81,17 @@
             <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                 {{ __('Dashboard') }}
             </x-responsive-nav-link>
+            @if(Auth::user()->role === 'admin')
+                <x-responsive-nav-link :href="route('admin.users.index')" :active="request()->routeIs('admin.users.*')">
+                    {{ __('Kelola Akun') }}
+                </x-responsive-nav-link>
+                <x-responsive-nav-link :href="route('admin.laporan.index')" :active="request()->routeIs('admin.laporan.*')">
+                    {{ __('Laporan') }}
+                </x-responsive-nav-link>
+                <x-responsive-nav-link :href="route('admin.rangkuman')" :active="request()->routeIs('admin.rangkuman')">
+                    {{ __('Rangkuman Pemeriksaan') }}
+                </x-responsive-nav-link>
+            @endif
         </div>
 
         <!-- Responsive Settings Options -->

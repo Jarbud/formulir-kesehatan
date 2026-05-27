@@ -2,9 +2,9 @@
     <x-slot name="header">
         <div class="flex items-center justify-between">
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                {{ __('Daftar Mahasiswa: ') }} {{ $fakultas }}
+                {{ __('Daftar Mahasiswa: ') }} {{ $prodi }} ({{ $fakultas }})
             </h2>
-            <a href="{{ route('admin.dashboard') }}" class="px-4 py-2 bg-white border border-gray-300 hover:bg-gray-50 shadow-sm text-gray-700 text-sm font-bold rounded-md transition">
+            <a href="{{ route('admin.fakultas.prodi', ['fakultas' => $fakultas]) }}" class="px-4 py-2 bg-white border border-gray-300 hover:bg-gray-50 shadow-sm text-gray-700 text-sm font-bold rounded-md transition">
                 Kembali
             </a>
         </div>
@@ -14,7 +14,7 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg border border-gray-100">
                 <div class="p-6 text-gray-900">
-                    <h3 class="text-lg font-bold text-gray-900 mb-6">Mahasiswa dari {{ $fakultas }}</h3>
+                    <h3 class="text-lg font-bold text-gray-900 mb-6">Mahasiswa Program Studi {{ $prodi }}</h3>
                     
                     <div class="overflow-x-auto">
                         <table id="mahasiswaTable" class="w-full text-left border-collapse">

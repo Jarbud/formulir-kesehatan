@@ -42,8 +42,8 @@
                                             </span>
                                         </td>
                                         <td class="px-6 py-4 text-center">
-                                            <a href="{{ route('admin.fakultas.mahasiswa', ['fakultas' => $item->fakultas]) }}" class="inline-flex items-center px-4 py-2 bg-blue-50 text-blue-700 hover:bg-blue-100 border border-blue-200 rounded-md text-xs font-bold transition">
-                                                Lihat Mahasiswa
+                                            <a href="{{ route('admin.fakultas.prodi', ['fakultas' => $item->fakultas]) }}" class="inline-flex items-center px-4 py-2 bg-blue-50 text-blue-700 hover:bg-blue-100 border border-blue-200 rounded-md text-xs font-bold transition">
+                                                Lihat Program Studi
                                             </a>
                                         </td>
                                     </tr>

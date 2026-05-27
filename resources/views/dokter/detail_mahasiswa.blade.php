@@ -55,6 +55,7 @@
                                     <th class="px-6 py-4">NIM</th>
                                     <!-- <th class="px-6 py-4">Status Pembayaran</th> -->
                                     <th class="px-6 py-4">Bukti Pembayaran</th>
+                                    <th class="px-6 py-4">Diperiksa Oleh Tenaga Kesehatan</th>
                                     <th class="px-6 py-4 text-center">Aksi</th>
                                 </tr>
                             </thead>
@@ -85,6 +86,13 @@
                                                 </a>
                                             @else
                                                 <span class="text-gray-400 italic">Belum Upload</span>
+                                            @endif
+                                        </td>
+                                        <td class="px-6 py-4 text-sm font-medium">
+                                            @if($riwayat->id_perawat_acc)
+                                                {{ $riwayat->perawat->name }}
+                                            @else
+                                                <span class="text-gray-400 italic">Belum Diperiksa</span>
                                             @endif
                                         </td>
                                         <td class="px-6 py-4 text-center">

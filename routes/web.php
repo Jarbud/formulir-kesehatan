@@ -8,11 +8,15 @@ use App\Http\Controllers\Perawat\DashboardController as PerawatDashboardControll
 use App\Http\Controllers\Perawat\FormulirController as PerawatFormulirController;
 use App\Http\Controllers\Dokter\DashboardController as DokterDashboardController;
 use App\Http\Controllers\Dokter\FormulirController as DokterFormulirController;
+use App\Http\Controllers\Admin\UserController;
 
 
 Route::get('/', function () {
     return view('welcome');
 });
+
+// Route untuk validasi QR Code Nakes (Public)
+Route::get('/validasi-nakes/{id}', [DashboardController::class, 'validasiNakes'])->name('validasi.nakes');
 
 // Route::get('/dashboard', function () {
 //     return view('dashboard');
@@ -27,13 +31,30 @@ Route::middleware('auth')->group(function () {
 // Route untuk Admin
 Route::middleware(['auth', 'checkRole:admin'])->group(function () {
     Route::get('/admin/dashboard', [DashboardController::class, 'adminDashboard'])->name('admin.dashboard');
-    Route::get('/admin/fakultas/{fakultas}', [DashboardController::class, 'mahasiswaByFakultas'])->name('admin.fakultas.mahasiswa');
+    Route::get('/admin/fakultas/{fakultas}', [DashboardController::class, 'prodiByFakultas'])->name('admin.fakultas.prodi');
+    Route::get('/admin/fakultas/{fakultas}/prodi/{prodi}', [DashboardController::class, 'mahasiswaByProdi'])->name('admin.prodi.mahasiswa');
     Route::get('/admin/mahasiswa/{id}', [DashboardController::class, 'detailMahasiswa'])->name('admin.mahasiswa.detail');
     
     // Route cetak PDF untuk Admin (menggunakan fungsi yang sama dari FormulirController)
     Route::get('/admin/cetak-formulir/{id}', [FormulirController::class, 'cetakPdf'])->name('admin.cetak.formulir');
     Route::get('/admin/export-excel/{id}', [DashboardController::class, 'exportExcel'])->name('admin.export.excel');
     Route::get('/admin/export-excel-all', [DashboardController::class, 'exportExcelAll'])->name('admin.export.excel.all');
+    Route::put('/admin/pemeriksaan/{id}/ttd', [DashboardController::class, 'ttdPemeriksaan'])->name('admin.pemeriksaan.ttd');
+    
+    Route::get('/admin/laporan', [DashboardController::class, 'laporanIndex'])->name('admin.laporan.index');
+    Route::post('/admin/laporan/export', [DashboardController::class, 'exportLaporan'])->name('admin.laporan.export');
+    Route::get('/admin/rangkuman', [DashboardController::class, 'rangkumanPemeriksaan'])->name('admin.rangkuman');
+
+    // CRUD Akun Users
+    Route::resource('/admin/users', UserController::class)->names([
+        'index' => 'admin.users.index',
+        'create' => 'admin.users.create',
+        'store' => 'admin.users.store',
+        'show' => 'admin.users.show',
+        'edit' => 'admin.users.edit',
+        'update' => 'admin.users.update',
+        'destroy' => 'admin.users.destroy',
+    ]);
 });
 
 // Route untuk Perawat

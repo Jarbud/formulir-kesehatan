@@ -52,6 +52,9 @@ class DashboardController extends Controller
         $pemeriksaan->kesimpulan = $request->kesimpulan;
         $pemeriksaan->rekomendasi = $request->rekomendasi;
         $pemeriksaan->status_proses = 'admin';
+
+        // Mengambil ID user (dokter) yang sedang login saat ini
+        $pemeriksaan->id_dokter_acc = Auth::id();
         $pemeriksaan->save();
 
         return redirect()->back()->with('success', 'Data pemeriksaan berhasil diperbarui.');
