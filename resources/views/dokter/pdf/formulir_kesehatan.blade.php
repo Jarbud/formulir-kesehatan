@@ -87,10 +87,10 @@
                 <img src="{{ public_path('images/logo-um.jpg') }}" width="70" alt="Logo UM">
             </td>
             <td width="70%" class="header-text">
-                <h4 class="font-bold">KEMENTERIAN PENDIDIKAN, KEBUDAYAAN,<br>RISET DAN TEKNOLOGI</h4>
-                <h3 class="font-bold">UNIVERSITAS NEGERI MALANG</h3>
+                <h3 class="font-bold">KEMENTERIAN PENDIDIKAN, KEBUDAYAAN,<br>RISET DAN TEKNOLOGI</h4>
+                <h4 class="font-bold">UNIVERSITAS NEGERI MALANG</h3>
                 <h4 class="font-bold">UPT LAYANAN KESEHATAN</h4>
-                <h3 class="font-bold">KLINIK PRATAMA</h3>
+                <h4 class="font-bold">KLINIK PRATAMA</h3>
                 <p>Jalan Semarang 5, Malang 65145<br>
                 Telepon: 0341 - 551312. Faksimile: 0341-559211<br>
                 Laman: www.um.ac.id</p>

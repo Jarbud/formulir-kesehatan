@@ -80,7 +80,7 @@
                                 </div>
                                 <div class="flex flex-col">
                                     <label class="text-xs font-bold text-gray-500 uppercase">Usia <span style="color: red;">*</span></label>
-                                    <input type="number" name="usia" class="mt-1 border-none bg-gray-50 rounded-lg p-2 font-semibold text-gray-800">
+                                    <input type="number" id="usia" name="usia" class="mt-1 border-none bg-gray-50 rounded-lg p-2 font-semibold text-gray-800" readonly>
                                 </div>
                             </div>
 
@@ -106,7 +106,7 @@
 
                             <div class="flex flex-col">
                                 <label class="text-xs font-bold text-gray-500 uppercase">Tempat, Tanggal Lahir <span style="color: red;">*</span></label>
-                                <input type="text" name="tempat_tanggal_lahir" placeholder="Malang, 20 April 2000" class="mt-1 border-none bg-gray-50 rounded-lg p-2 font-semibold text-gray-800">
+                                <input type="text" id="tempat_tanggal_lahir" name="tempat_tanggal_lahir" placeholder="Malang, 20 April 2000" class="mt-1 border-none bg-gray-50 rounded-lg p-2 font-semibold text-gray-800">
                             </div>
                             <div class="flex flex-col">
                                 <label class="text-xs font-bold text-gray-500 uppercase">Alamat Asal <span style="color: red;">*</span></label>
@@ -173,9 +173,11 @@
                             <input type="text" name="riwayat_sakit" class="mt-1 border-gray-300 rounded-lg p-2" placeholder="Contoh: Maag / Tidak ada">
                         </div>
 
-                        <label class="block text-sm font-bold text-gray-700 uppercase tracking-wide mb-4">
+                        <label class="block text-sm font-bold text-gray-700 uppercase tracking-wide mb-1">
                             Riwayat kesehatan fisik (dari kecil sampai dewasa) <span class="text-red-500">*</span>
                         </label>
+                        <!-- Keterangan tambahan -->
+                        <p class="text-xs font-normal text-gray-500 italic mb-4">Jika Iya, Dicentang</p>
 
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div class="flex items-start p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors md:col-span-2">
@@ -381,5 +383,55 @@
             otherText.classList.add('opacity-50');
         }
     }
+
+    // Otomatisasi perhitungan usia dari field Tempat, Tanggal Lahir
+    const tempatTanggalLahirInput = document.getElementById('tempat_tanggal_lahir');
+    const usiaInput = document.getElementById('usia');
+
+    tempatTanggalLahirInput.addEventListener('input', function() {
+        const inputVal = this.value;
+        
+        // Memisahkan tempat dan tanggal berdasarkan tanda koma
+        const parts = inputVal.split(',');
+        
+        if (parts.length > 1) {
+            let dateStr = parts[parts.length - 1].trim(); 
+            
+            // Mapping nama bulan Indonesia ke Inggris agar bisa diparse oleh JS Date
+            const bulanIdEn = {
+                'januari': 'January', 'februari': 'February', 'maret': 'March', 'april': 'April',
+                'mei': 'May', 'juni': 'June', 'juli': 'July', 'agustus': 'August',
+                'september': 'September', 'oktober': 'October', 'november': 'November', 'desember': 'December'
+            };
+
+            let engDateStr = dateStr.toLowerCase();
+            for (const [id, en] of Object.entries(bulanIdEn)) {
+                engDateStr = engDateStr.replace(id, en.toLowerCase());
+            }
+
+            const dob = new Date(engDateStr);
+            
+            if (!isNaN(dob.getTime())) {
+                const today = new Date();
+                let age = today.getFullYear() - dob.getFullYear();
+                const m = today.getMonth() - dob.getMonth();
+                
+                // Kurangi 1 tahun jika bulan/hari ini sebelum bulan/hari kelahiran di tahun ini
+                if (m < 0 || (m === 0 && today.getDate() < dob.getDate())) {
+                    age--;
+                }
+                
+                if(age >= 0 && age < 150) { 
+                    usiaInput.value = age;
+                } else {
+                    usiaInput.value = '';
+                }
+            } else {
+                usiaInput.value = '';
+            }
+        } else {
+            usiaInput.value = '';
+        }
+    });
     </script>
 </x-app-layout>

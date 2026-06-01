@@ -87,10 +87,10 @@
                 <img src="{{ public_path('images/logo-um.jpg') }}" width="70" alt="Logo UM">
             </td>
             <td width="70%" class="header-text">
-                <h4 class="font-bold">KEMENTERIAN PENDIDIKAN, KEBUDAYAAN,<br>RISET DAN TEKNOLOGI</h4>
-                <h3 class="font-bold">UNIVERSITAS NEGERI MALANG</h3>
+                <h3 class="font-bold">KEMENTERIAN PENDIDIKAN, KEBUDAYAAN,<br>RISET DAN TEKNOLOGI</h4>
+                <h4 class="font-bold">UNIVERSITAS NEGERI MALANG</h3>
                 <h4 class="font-bold">UPT LAYANAN KESEHATAN</h4>
-                <h3 class="font-bold">KLINIK PRATAMA</h3>
+                <h4 class="font-bold">KLINIK PRATAMA</h3>
                 <p>Jalan Semarang 5, Malang 65145<br>
                 Telepon: 0341 - 551312. Faksimile: 0341-559211<br>
                 Laman: www.um.ac.id</p>
@@ -101,7 +101,7 @@
         </tr>
     </table>
 
-    <div class="font-bold mb-1 mt-1">Jadwal Pemeriksaan: </div>
+    <div class="font-bold mb-1 mt-1">Jadwal Pemeriksaan: {{ \Carbon\Carbon::parse($data->updated_at)->locale('id')->isoFormat('D MMMM Y') }}</div>
 
     <div class="text-center mt-2 mb-2">
         <h4 style="margin:0;">FORMULIR PEMERIKSAAN KESEHATAN MAHASISWA BARU</h4>
@@ -234,7 +234,7 @@
     <table class="ttd-table">
         <tr>
             <td style="text-align: left; padding-left: 20px; vertical-align: top;">
-                Malang, ..............................<br>
+                Malang, {{ \Carbon\Carbon::parse($data->updated_at)->locale('id')->isoFormat('D MMMM Y') }}<br>
                 Dokter Penanggungjawab
                 <div style="margin-top: 10px; margin-bottom: 10px;">
                     <img src="data:image/svg+xml;base64,{!! base64_encode(QrCode::size(70)->generate(route('validasi.nakes', 'pj'))) !!}" width="70" height="70">

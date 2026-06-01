@@ -21,8 +21,12 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         //
-        if (str_contains(request()->getHttpHost(), 'ngrok-free.app')) {
-            URL::forceScheme('https');
+        // if (str_contains(request()->getHttpHost(), 'ngrok-free.app')) {
+        //     URL::forceScheme('https');
+        // }
+        // Paksa semua URL asset & route menggunakan HTTPS jika diakses lewat Ngrok
+        if (str_contains(request()->getHost(), 'ngrok') || request()->header('X-Forwarded-Proto') === 'https') {
+            \Illuminate\Support\Facades\URL::forceScheme('https');
         }
     }
 }
