@@ -32,12 +32,18 @@
             <!-- Header Form (Kop Surat Mockup) -->
             <div class="bg-white border-b border-gray-200 p-8 rounded-t-2xl shadow-sm">
                 <div class="flex items-center justify-between border-b-2 border-gray-900 pb-4 mb-6">
-                    <img src="{{ asset('images/logo-kecil.png') }}" class="h-16 w-auto" onerror="this.src='https://upload.wikimedia.org/wikipedia/id/thumb/7/7e/Logo_Universitas_Negeri_Malang.png/200px-Logo_Universitas_Negeri_Malang.png'">
+                    <img src="{{ asset('images/logo-um.jpg') }}" class="h-16 w-auto" onerror="this.src='https://upload.wikimedia.org/wikipedia/id/thumb/7/7e/Logo_Universitas_Negeri_Malang.png/200px-Logo_Universitas_Negeri_Malang.png'">
                     <div class="text-center flex-1">
-                        <h3 class="font-bold text-lg leading-tight uppercase">Universitas Negeri Malang</h3>
-                        <p class="text-sm font-semibold italic uppercase">UPT Layanan Kesehatan - Klinik Pratama</p>
-                        <p class="text-[10px] text-gray-500">Jl. Semarang 5, Malang 65145 | Telp: 0341-551312</p>
+                        <h3 class="text-lg leading-tight uppercase">KEMENTERIAN PENDIDIKAN TINGGI, SAINS,</h3>
+                        <h3 class="text-lg leading-tight uppercase">DAN TEKNOLOGI</h3>
+                        <h3 class="font-bold text-lg leading-tight uppercase">Universitas Negeri Malang (UM)</h3>
+                        <p class="text-sm font-semibold italic uppercase">UPT Layanan Kesehatan</p>
+                        <p class="text-sm font-semibold italic uppercase">Klinik Pratama</p>
+                        <p class="text-[10px] text-gray-500">Jl. Semarang 5, Malang 65145</p>
+                        <p class="text-[10px] text-gray-500">Telp: 0341-551312, Faksimile: 0341-551021</p>
+                        <p class="text-[10px] text-gray-500">Laman: www.um.ac.id</p>
                     </div>
+<img src="{{ asset('images/logo-kecil.png') }}" class="h-16 w-auto" onerror="this.src='https://upload.wikimedia.org/wikipedia/id/thumb/7/7e/Logo_Universitas_Negeri_Malang.png/200px-Logo_Universitas_Negeri_Malang.png'">
                     <!-- <div class="w-16 h-16 flex items-center justify-center border-2 border-blue-900 rounded-full text-blue-900 font-black">UM</div> -->
                 </div>
                 <div class="text-center italic text-sm text-gray-700">
@@ -129,6 +135,13 @@
                                 <input required type="text" name="wa_wali" class="mt-1 border-none bg-gray-50 rounded-lg p-2 font-semibold text-gray-800">
                             </div>
                             <div class="flex flex-col">
+                                <label class="text-xs font-bold text-gray-500 uppercase">Sudah mengisi skrining kesehatan mental<span style="color: red;">*</span></label>
+                                <select name="skrining_kesehatan_mental" class="mt-1 border-none bg-gray-50 rounded-lg p-2 font-semibold text-gray-800">
+                                    <option value="Belum" selected>Belum</option>
+                                    <option value="Sudah">Sudah</option>
+                                </select>
+                            </div>
+                            <div class="flex flex-col">
                                 <label class="text-xs font-bold text-gray-500 uppercase">Disabilitas</label>
                                 <select name="disabilitas" class="mt-1 border-none bg-gray-50 rounded-lg p-2 font-semibold text-gray-800">
                                     <option value="Tidak Ada" selected>Tidak Ada</option>
@@ -139,7 +152,7 @@
 
                         <!-- 2. Data Fisik (Input) -->
                         <div class="space-y-4">
-                            <h4 class="font-bold text-blue-900 border-b pb-1 text-sm uppercase tracking-wider">II. Pemeriksaan Fisik (Diisi Petugas)</h4>
+                            <h4 class="font-bold text-blue-900 border-b pb-1 text-sm uppercase tracking-wider">II. Pemeriksaan Fisik</h4>
                             
                             <div class="grid grid-cols-2 gap-4">
                                 <div class="flex flex-col">

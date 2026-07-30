@@ -34,7 +34,8 @@ Route::middleware(['auth', 'checkRole:admin'])->group(function () {
     Route::get('/admin/fakultas/{fakultas}', [DashboardController::class, 'prodiByFakultas'])->name('admin.fakultas.prodi');
     Route::get('/admin/fakultas/{fakultas}/prodi/{prodi}', [DashboardController::class, 'mahasiswaByProdi'])->name('admin.prodi.mahasiswa');
     Route::get('/admin/mahasiswa/{id}', [DashboardController::class, 'detailMahasiswa'])->name('admin.mahasiswa.detail');
-    
+    Route::put('/admin/pemeriksaan/{id}', [DashboardController::class, 'update'])->name('admin.pemeriksaan.update');
+
     // Route cetak PDF untuk Admin (menggunakan fungsi yang sama dari FormulirController)
     Route::get('/admin/cetak-formulir/{id}', [FormulirController::class, 'cetakPdf'])->name('admin.cetak.formulir');
     Route::get('/admin/export-excel/{id}', [DashboardController::class, 'exportExcel'])->name('admin.export.excel');
@@ -44,6 +45,8 @@ Route::middleware(['auth', 'checkRole:admin'])->group(function () {
     Route::get('/admin/laporan', [DashboardController::class, 'laporanIndex'])->name('admin.laporan.index');
     Route::post('/admin/laporan/export', [DashboardController::class, 'exportLaporan'])->name('admin.laporan.export');
     Route::get('/admin/rangkuman', [DashboardController::class, 'rangkumanPemeriksaan'])->name('admin.rangkuman');
+    Route::get('/admin/rangkuman/export-all', [DashboardController::class, 'exportKinerjaAll'])->name('admin.rangkuman.export_all');
+    Route::get('/admin/rangkuman/export/{role}/{id}', [DashboardController::class, 'exportKinerjaDetails'])->name('admin.rangkuman.export');
 
     // CRUD Akun Users
     Route::resource('/admin/users', UserController::class)->names([

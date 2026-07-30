@@ -1,9 +1,15 @@
 <x-app-layout>
     <x-slot name="header">
-        <div class="flex items-center space-x-2">
+        <div class="flex items-center justify-between">
             <h2 class="font-bold text-xl text-gray-800 leading-tight">
                 {{ __('Rangkuman Pemeriksaan Kinerja') }}
             </h2>
+            <a href="{{ route('admin.rangkuman.export_all') }}" class="inline-flex items-center px-4 py-2 bg-green-600 hover:bg-green-700 text-white text-xs font-bold rounded-lg shadow-sm border border-transparent transition">
+                <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+                </svg>
+                Export Semua Kinerja
+            </a>
         </div>
     </x-slot>
 
@@ -24,7 +30,8 @@
                                 <tr class="bg-slate-50 border-y border-slate-200 text-xs font-bold text-slate-500 uppercase tracking-wider">
                                     <th class="px-4 py-3 w-[10%]">No</th>
                                     <th class="px-4 py-3">Nama Perawat</th>
-                                    <th class="px-4 py-3 text-center w-[35%]">Total Pasien</th>
+                                    <th class="px-4 py-3 text-center w-[25%]">Total Pasien</th>
+                                    <th class="px-4 py-3 text-center w-[20%]">Aksi</th>
                                 </tr>
                             </thead>
                             <tbody class="divide-y divide-slate-100">
@@ -41,10 +48,15 @@
                                                 {{ $perawat->total }} Data
                                             </span>
                                         </td>
+                                        <td class="px-4 py-3 text-sm text-center">
+                                            <a href="{{ route('admin.rangkuman.export', ['role' => 'perawat', 'id' => $perawat->id]) }}" class="inline-flex items-center px-3 py-1.5 bg-green-50 text-green-700 hover:bg-green-100 border border-green-200 rounded-md text-xs font-bold transition">
+                                                Export Excel
+                                            </a>
+                                        </td>
                                     </tr>
                                 @empty
                                     <tr>
-                                        <td colspan="3" class="px-4 py-6 text-center text-sm text-slate-500">Belum ada data perawat yang memeriksa</td>
+                                        <td colspan="4" class="px-4 py-6 text-center text-sm text-slate-500">Belum ada data perawat yang memeriksa</td>
                                     </tr>
                                 @endforelse
                             </tbody>
@@ -64,7 +76,8 @@
                                 <tr class="bg-slate-50 border-y border-slate-200 text-xs font-bold text-slate-500 uppercase tracking-wider">
                                     <th class="px-4 py-3 w-[10%]">No</th>
                                     <th class="px-4 py-3">Nama Dokter</th>
-                                    <th class="px-4 py-3 text-center w-[35%]">Total Pasien</th>
+                                    <th class="px-4 py-3 text-center w-[25%]">Total Pasien</th>
+                                    <th class="px-4 py-3 text-center w-[20%]">Aksi</th>
                                 </tr>
                             </thead>
                             <tbody class="divide-y divide-slate-100">
@@ -81,10 +94,15 @@
                                                 {{ $dokter->total }} Data
                                             </span>
                                         </td>
+                                        <td class="px-4 py-3 text-sm text-center">
+                                            <a href="{{ route('admin.rangkuman.export', ['role' => 'dokter', 'id' => $dokter->id]) }}" class="inline-flex items-center px-3 py-1.5 bg-green-50 text-green-700 hover:bg-green-100 border border-green-200 rounded-md text-xs font-bold transition">
+                                                Export Excel
+                                            </a>
+                                        </td>
                                     </tr>
                                 @empty
                                     <tr>
-                                        <td colspan="3" class="px-4 py-6 text-center text-sm text-slate-500">Belum ada data dokter yang memeriksa</td>
+                                        <td colspan="4" class="px-4 py-6 text-center text-sm text-slate-500">Belum ada data dokter yang memeriksa</td>
                                     </tr>
                                 @endforelse
                             </tbody>

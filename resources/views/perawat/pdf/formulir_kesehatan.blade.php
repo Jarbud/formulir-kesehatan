@@ -181,6 +181,25 @@
             </td>
         </tr>
         <tr>
+            <td class="col-label">Lingkar Perut*</td><td class="col-titik">:</td>
+            <td class="col-value"><u>{{ $data->lingkar_perut ?: '-' }}</u> cm</td>
+        </tr>
+        <tr>
+            <td class="col-label">Gula Darah*</td><td class="col-titik">:</td>
+            <td class="col-value"><u>{{ $data->gula_darah ?: '-' }}</u> mg/dL</td>
+        </tr>
+        <tr>
+            <td class="col-label">Visus Mata*</td><td class="col-titik">:</td>
+            <td class="col-value">
+                @if($data->visus_mata == 'Normal')
+                    <strong>Normal</strong>
+                @elseif($data->visus_mata == 'Gangguan')
+                    <strong>Gangguan</strong>
+                @else
+                    <span class="text-muted">-</span> @endif
+            </td>
+        </tr>
+        <tr>
             <td class="col-label">Riwayat Sakit</td><td class="col-titik">:</td>
             <td class="col-value">{{ $data->riwayat_sakit ?: '-' }}</td>
         </tr>
@@ -219,7 +238,7 @@
                 Malang, ..............................<br>
                 Dokter Penanggungjawab
                 <div class="ruang-ttd"></div>
-                <strong><u>dr. Ifa mufida, MMRS</u></strong><br>
+                <strong><u>dr. Ifa Mufida, MMRS</u></strong><br>
                 SIP. 440.1/0928/35.73.406/2023
             </td>
             <td style="text-align: right; padding-right: 50px;">

@@ -10,7 +10,8 @@ class PemeriksaanKesehatan extends Model
     //
     protected $fillable = [
         'user_id', 'name', 'nik', 'nim', 'jenis_kelamin', 'usia', 'fakultas', 'tekanan_darah', 'ishihara',
-        'prodi', 'tempat_tanggal_lahir', 'alamat_asal', 'alamat_malang', 'wa', 'nama_wali', 'wa_wali', 'disabilitas', 'tinggi_badan', 
+        'lingkar_perut', 'gula_darah', 'visus_mata',
+        'prodi', 'tempat_tanggal_lahir', 'alamat_asal', 'alamat_malang', 'wa', 'nama_wali', 'wa_wali', 'skrining_kesehatan_mental', 'disabilitas', 'tinggi_badan', 
         'berat_badan', 'imt', 'riwayat_sakit', 'riwayat_kesehatan_fisik', 'keluhan', 'status_proses',
         'status_pembayaran', 'bukti_pembayaran',
         'kesimpulan', 'rekomendasi'
@@ -28,3 +29,4 @@ class PemeriksaanKesehatan extends Model
         return $this->belongsTo(User::class, 'id_dokter_acc');
     }
 }
+

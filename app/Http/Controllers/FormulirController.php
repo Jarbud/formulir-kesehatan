@@ -70,6 +70,7 @@ class FormulirController extends Controller
                 'nama_wali'             => $request->nama_wali,
                 'wa_wali'               => $request->wa_wali,
                 'disabilitas'           => $request->disabilitas,
+                'skrining_kesehatan_mental' => $request->skrining_kesehatan_mental,
                 'tinggi_badan'          => $request->tinggi_badan,
                 'berat_badan'           => $request->berat_badan,
                 'imt'                   => $request->imt,
@@ -150,3 +151,4 @@ class FormulirController extends Controller
         return $pdf->stream('Formulir_Kesehatan_'.$data['nim'].'.pdf'); 
     }
 }
+

@@ -76,8 +76,8 @@ class DashboardController extends Controller
         $columns = [
             'ID', 'User ID', 'Nama Lengkap', 'NIK', 'NIM', 'Jenis Kelamin', 'Usia', 'Fakultas', 'Prodi', 
             'Tempat Tanggal Lahir', 'Alamat Asal', 'Alamat Malang', 'WA', 'Nama Wali', 'WA Wali', 
-            'Disabilitas', 'Tinggi Badan', 'Berat Badan', 'IMT', 'Riwayat Sakit', 
-            'Riwayat Kesehatan Fisik', 'Keluhan', 'Status Pembayaran', 'Tanggal Pengajuan'
+            'Disabilitas', 'Tinggi Badan', 'Berat Badan', 'IMT', 'Lingkar Perut', 'Gula Darah', 'Visus Mata',
+            'Riwayat Sakit', 'Riwayat Kesehatan Fisik', 'Keluhan', 'Status Pembayaran', 'Tanggal Pengajuan'
         ];
 
         $callback = function() use($data, $columns) {
@@ -104,6 +104,9 @@ class DashboardController extends Controller
                 $data->tinggi_badan,
                 $data->berat_badan,
                 $data->imt,
+                $data->lingkar_perut,
+                $data->gula_darah,
+                $data->visus_mata,
                 $data->riwayat_sakit,
                 $data->riwayat_kesehatan_fisik,
                 $data->keluhan,
@@ -134,8 +137,8 @@ class DashboardController extends Controller
         $columns = [
             'ID', 'User ID', 'Nama Lengkap', 'NIK', 'NIM', 'Jenis Kelamin', 'Usia', 'Fakultas', 'Prodi', 
             'Tempat Tanggal Lahir', 'Alamat Asal', 'Alamat Malang', 'WA', 'Nama Wali', 'WA Wali', 
-            'Disabilitas', 'Tinggi Badan', 'Berat Badan', 'IMT', 'Riwayat Sakit', 
-            'Riwayat Kesehatan Fisik', 'Keluhan', 'Status Pembayaran', 'Tanggal Pengajuan'
+            'Disabilitas', 'Tinggi Badan', 'Berat Badan', 'IMT', 'Lingkar Perut', 'Gula Darah', 'Visus Mata',
+            'Riwayat Sakit', 'Riwayat Kesehatan Fisik', 'Keluhan', 'Status Pembayaran', 'Tanggal Pengajuan'
         ];
 
         $callback = function() use($data, $columns) {
@@ -163,6 +166,9 @@ class DashboardController extends Controller
                     $item->tinggi_badan,
                     $item->berat_badan,
                     $item->imt,
+                    $item->lingkar_perut,
+                    $item->gula_darah,
+                    $item->visus_mata,
                     $item->riwayat_sakit,
                     $item->riwayat_kesehatan_fisik,
                     $item->keluhan,

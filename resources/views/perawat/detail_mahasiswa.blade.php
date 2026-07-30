@@ -130,6 +130,24 @@
                                                 <label class="inline-flex items-center"><input type="radio" name="ishihara" value="parsial" {{ ($riwayat->ishihara ?? '') == 'parsial' ? 'checked' : '' }} class="w-4 h-4 text-indigo-600 border-gray-300 focus:ring-indigo-500" required><span class="ml-2">Parsial</span></label>
                                             </div>
                                         </div>
+
+                                        <div class="mt-4">
+                                            <label for="lingkar_perut_{{ $riwayat->id }}" class="block text-sm font-medium text-gray-700">Lingkar Perut (cm)</label>
+                                            <input type="number" step="0.1" name="lingkar_perut" id="lingkar_perut_{{ $riwayat->id }}" value="{{ $riwayat->lingkar_perut ?? '' }}" class="block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                                        </div>
+
+                                        <div class="mt-4">
+                                            <label for="gula_darah_{{ $riwayat->id }}" class="block text-sm font-medium text-gray-700">Gula Darah (mg/dL)</label>
+                                            <input type="number" step="0.1" name="gula_darah" id="gula_darah_{{ $riwayat->id }}" value="{{ $riwayat->gula_darah ?? '' }}" class="block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                                        </div>
+
+                                        <div class="mt-4">
+                                            <label class="block text-sm font-medium text-gray-700">Visus Mata</label>
+                                            <div class="mt-2 space-x-4 flex">
+                                                <label class="inline-flex items-center"><input type="radio" name="visus_mata" value="Normal" {{ ($riwayat->visus_mata ?? '') == 'Normal' ? 'checked' : '' }} class="w-4 h-4 text-indigo-600 border-gray-300 focus:ring-indigo-500" required><span class="ml-2">Normal</span></label>
+                                                <label class="inline-flex items-center"><input type="radio" name="visus_mata" value="Gangguan" {{ ($riwayat->visus_mata ?? '') == 'Gangguan' ? 'checked' : '' }} class="w-4 h-4 text-indigo-600 border-gray-300 focus:ring-indigo-500" required><span class="ml-2">Gangguan</span></label>
+                                            </div>
+                                        </div>
                                     </div>
                                     <div class="px-4 py-3 bg-gray-50 sm:px-6 sm:flex sm:flex-row-reverse">
                                         <button type="submit" class="inline-flex justify-center w-full px-4 py-2 text-base font-medium text-white bg-indigo-600 border border-transparent rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:ml-3 sm:w-auto sm:text-sm">Simpan</button>

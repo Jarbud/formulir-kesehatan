@@ -121,9 +121,9 @@ class DashboardController extends Controller
 
         $columns = [
             'ID', 'User ID', 'Nama Lengkap', 'NIK', 'NIM', 'Jenis Kelamin', 'Usia', 'Fakultas', 'Prodi', 
-            'Tempat Tanggal Lahir', 'Alamat Asal', 'Alamat Malang', 'WA', 'Nama Wali', 'WA Wali', 
-            'Disabilitas', 'Tinggi Badan', 'Berat Badan', 'IMT', 'Riwayat Sakit', 
-            'Riwayat Kesehatan Fisik', 'Keluhan', 'Status Pembayaran', 'Tanggal Pengajuan'
+            'Tempat Tanggal Lahir', 'Alamat Asal', 'Alamat Malang', 'WA', 'Nama Wali', 'WA Wali', 'Skrining Kesehatan Mental', 
+            'Disabilitas', 'Tinggi Badan', 'Berat Badan', 'IMT', 'Lingkar Perut', 'Gula Darah', 'Visus Mata',
+            'Riwayat Sakit', 'Riwayat Kesehatan Fisik', 'Keluhan', 'Status Pembayaran', 'Tanggal Pengajuan'
         ];
 
         $callback = function() use($data, $columns) {
@@ -146,10 +146,14 @@ class DashboardController extends Controller
                 $data->wa,
                 $data->nama_wali,
                 $data->wa_wali,
+                $data->skrining_kesehatan_mental,
                 $data->disabilitas,
                 $data->tinggi_badan,
                 $data->berat_badan,
                 $data->imt,
+                $data->lingkar_perut,
+                $data->gula_darah,
+                $data->visus_mata,
                 $data->riwayat_sakit,
                 $data->riwayat_kesehatan_fisik,
                 $data->keluhan,
@@ -179,9 +183,9 @@ class DashboardController extends Controller
 
         $columns = [
             'ID', 'User ID', 'Nama Lengkap', 'NIK', 'NIM', 'Jenis Kelamin', 'Usia', 'Fakultas', 'Prodi', 
-            'Tempat Tanggal Lahir', 'Alamat Asal', 'Alamat Malang', 'WA', 'Nama Wali', 'WA Wali', 
-            'Disabilitas', 'Tinggi Badan', 'Berat Badan', 'IMT', 'Riwayat Sakit', 
-            'Riwayat Kesehatan Fisik', 'Keluhan', 'Status Pembayaran', 'Tanggal Pengajuan'
+            'Tempat Tanggal Lahir', 'Alamat Asal', 'Alamat Malang', 'WA', 'Nama Wali', 'WA Wali', 'Skrining Kesehatan Mental',
+            'Disabilitas', 'Tinggi Badan', 'Berat Badan', 'IMT', 'Lingkar Perut', 'Gula Darah', 'Visus Mata',
+            'Riwayat Sakit', 'Riwayat Kesehatan Fisik', 'Keluhan', 'Status Pembayaran', 'Tanggal Pengajuan'
         ];
 
         $callback = function() use($data, $columns) {
@@ -205,10 +209,14 @@ class DashboardController extends Controller
                     $item->wa,
                     $item->nama_wali,
                     $item->wa_wali,
+                    $item->skrining_kesehatan_mental,
                     $item->disabilitas,
                     $item->tinggi_badan,
                     $item->berat_badan,
                     $item->imt,
+                    $item->lingkar_perut,
+                    $item->gula_darah,
+                    $item->visus_mata,
                     $item->riwayat_sakit,
                     $item->riwayat_kesehatan_fisik,
                     $item->keluhan,
@@ -268,9 +276,9 @@ class DashboardController extends Controller
 
         $columns = [
             'ID', 'User ID', 'Nama Lengkap', 'NIK', 'NIM', 'Jenis Kelamin', 'Usia', 'Fakultas', 'Prodi', 
-            'Tempat Tanggal Lahir', 'Alamat Asal', 'Alamat Malang', 'WA', 'Nama Wali', 'WA Wali', 
-            'Disabilitas', 'Tinggi Badan', 'Berat Badan', 'IMT', 'Riwayat Sakit', 
-            'Riwayat Kesehatan Fisik', 'Keluhan', 'Status Pembayaran', 'Tanggal Pengajuan', 'Status Proses', 'Kesimpulan', 'Rekomendasi'
+            'Tempat Tanggal Lahir', 'Alamat Asal', 'Alamat Malang', 'WA', 'Nama Wali', 'WA Wali', 'Skrining Kesehatan Mental',
+            'Disabilitas', 'Tinggi Badan', 'Berat Badan', 'IMT', 'Lingkar Perut', 'Gula Darah', 'Visus Mata',
+            'Riwayat Sakit', 'Riwayat Kesehatan Fisik', 'Keluhan', 'Status Pembayaran', 'Tanggal Pengajuan', 'Status Proses', 'Kesimpulan', 'Rekomendasi'
         ];
 
         $callback = function() use($data, $columns) {
@@ -280,9 +288,9 @@ class DashboardController extends Controller
             foreach ($data as $item) {
                 $row = [
                     $item->id, $item->user_id, $item->name, $item->nik, $item->nim, $item->jenis_kelamin, $item->usia, $item->fakultas, $item->prodi, 
-                    $item->tempat_tanggal_lahir, $item->alamat_asal, $item->alamat_malang, $item->wa, $item->nama_wali, $item->wa_wali, 
-                    $item->disabilitas, $item->tinggi_badan, $item->berat_badan, $item->imt, $item->riwayat_sakit, 
-                    $item->riwayat_kesehatan_fisik, $item->keluhan, $item->status_pembayaran, $item->created_at ? $item->created_at->format('Y-m-d H:i:s') : '',
+                    $item->tempat_tanggal_lahir, $item->alamat_asal, $item->alamat_malang, $item->wa, $item->nama_wali, $item->wa_wali, $item->skrining_kesehatan_mental,
+                    $item->disabilitas, $item->tinggi_badan, $item->berat_badan, $item->imt, $item->lingkar_perut, $item->gula_darah, $item->visus_mata,
+                    $item->riwayat_sakit, $item->riwayat_kesehatan_fisik, $item->keluhan, $item->status_pembayaran, $item->created_at ? $item->created_at->format('Y-m-d H:i:s') : '',
                     $item->status_proses, $item->kesimpulan, $item->rekomendasi
                 ];
                 fputcsv($file, $row);
@@ -298,7 +306,7 @@ class DashboardController extends Controller
         // Menggabungkan (join) tabel untuk mendapatkan nama Perawat dan total pemeriksaannya
         $perawatSummary = DB::table('pemeriksaan_kesehatans')
             ->join('users', 'pemeriksaan_kesehatans.id_perawat_acc', '=', 'users.id')
-            ->select('users.name', DB::raw('count(pemeriksaan_kesehatans.id) as total'))
+            ->select('users.id', 'users.name', DB::raw('count(pemeriksaan_kesehatans.id) as total'))
             ->whereNotNull('id_perawat_acc')
             ->groupBy('users.id', 'users.name')
             ->orderByDesc('total')
@@ -307,7 +315,7 @@ class DashboardController extends Controller
         // Menggabungkan (join) tabel untuk mendapatkan nama Dokter dan total pemeriksaannya
         $dokterSummary = DB::table('pemeriksaan_kesehatans')
             ->join('users', 'pemeriksaan_kesehatans.id_dokter_acc', '=', 'users.id')
-            ->select('users.name', DB::raw('count(pemeriksaan_kesehatans.id) as total'))
+            ->select('users.id', 'users.name', DB::raw('count(pemeriksaan_kesehatans.id) as total'))
             ->whereNotNull('id_dokter_acc')
             ->groupBy('users.id', 'users.name')
             ->orderByDesc('total')
@@ -315,4 +323,213 @@ class DashboardController extends Controller
 
         return view('admin.rangkuman', compact('perawatSummary', 'dokterSummary'));
     }
+
+    public function exportKinerjaDetails($role, $id)
+    {
+        $user = User::findOrFail($id);
+        
+        if ($role === 'perawat') {
+            $pemeriksaans = PemeriksaanKesehatan::where('id_perawat_acc', $id)->orderBy('created_at', 'desc')->get();
+            $titleRole = "Perawat";
+        } elseif ($role === 'dokter') {
+            $pemeriksaans = PemeriksaanKesehatan::where('id_dokter_acc', $id)->orderBy('created_at', 'desc')->get();
+            $titleRole = "Dokter";
+        } else {
+            abort(404);
+        }
+
+        $nameParts = explode(' ', trim($user->name));
+        $shortName = implode('_', array_slice($nameParts, 0, 2));
+        $cleanName = preg_replace('/[^A-Za-z0-9_]/', '', $shortName);
+
+        $filename = "Kinerja_" . $titleRole . "_" . $cleanName . "_" . date('Ymd_His') . ".csv";
+        $headers = [
+            "Content-type"        => "application/vnd.ms-excel; charset=UTF-8",
+            "Content-Disposition" => 'attachment; filename="' . $filename . '"',
+            "Pragma"              => "no-cache",
+            "Cache-Control"       => "must-revalidate, post-check=0, pre-check=0",
+            "Expires"             => "0"
+        ];
+
+        $columns = [
+            'ID Pemeriksaan', 'NIM', 'Nama Mahasiswa', 'Jenis Kelamin', 'Usia', 'Fakultas', 'Prodi', 
+            'Tinggi Badan', 'Berat Badan', 'IMT', 'Tekanan Darah', 'Ishihara', 'Lingkar Perut', 'Gula Darah', 'Visus Mata',
+            'Kesimpulan', 'Rekomendasi', 'Tanggal Pemeriksaan'
+        ];
+
+        $callback = function() use($pemeriksaans, $columns) {
+            $file = fopen('php://output', 'w');
+            
+            // Tambahkan BOM agar karakter khusus terbaca Excel dengan baik
+            fwrite($file, "\xEF\xBB\xBF");
+            // Tambahkan sep=, agar Excel langsung membagi kolom dengan koma tanpa terpengaruh regional setting
+            fwrite($file, "sep=,\n");
+            
+            fputcsv($file, $columns);
+
+            foreach ($pemeriksaans as $item) {
+                $row = [
+                    $item->id,
+                    $item->nim,
+                    $item->name,
+                    $item->jenis_kelamin,
+                    $item->usia,
+                    $item->fakultas,
+                    $item->prodi,
+                    $item->tinggi_badan,
+                    $item->berat_badan,
+                    $item->imt,
+                    $item->tekanan_darah,
+                    $item->ishihara,
+                    $item->lingkar_perut,
+                    $item->gula_darah,
+                    $item->visus_mata,
+                    $item->kesimpulan,
+                    $item->rekomendasi,
+                    $item->created_at ? $item->created_at->format('Y-m-d H:i:s') : ''
+                ];
+                fputcsv($file, $row);
+            }
+            fclose($file);
+        };
+
+        return response()->stream($callback, 200, $headers);
+    }
+
+    public function exportKinerjaAll()
+    {
+        $pemeriksaans = PemeriksaanKesehatan::with(['perawat', 'dokter'])
+            ->where(function($query) {
+                $query->whereNotNull('id_perawat_acc')
+                      ->orWhereNotNull('id_dokter_acc');
+            })
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        $filename = "Semua_Kinerja_Pemeriksaan_" . date('Ymd_His') . ".csv";
+        $headers = [
+            "Content-type"        => "application/vnd.ms-excel; charset=UTF-8",
+            "Content-Disposition" => 'attachment; filename="' . $filename . '"',
+            "Pragma"              => "no-cache",
+            "Cache-Control"       => "must-revalidate, post-check=0, pre-check=0",
+            "Expires"             => "0"
+        ];
+
+        $columns = [
+            'ID Pemeriksaan', 'NIM', 'Nama Mahasiswa', 'Jenis Kelamin', 'Usia', 'Fakultas', 'Prodi', 
+            'Perawat Pemeriksa', 'Dokter Pemeriksa', 'Tinggi Badan', 'Berat Badan', 'IMT', 
+            'Tekanan Darah', 'Ishihara', 'Lingkar Perut', 'Gula Darah', 'Visus Mata',
+            'Kesimpulan', 'Rekomendasi', 'Tanggal Pemeriksaan'
+        ];
+
+        $callback = function() use($pemeriksaans, $columns) {
+            $file = fopen('php://output', 'w');
+            
+            // Tambahkan BOM agar karakter khusus terbaca Excel dengan baik
+            fwrite($file, "\xEF\xBB\xBF");
+            // Tambahkan sep=, agar Excel langsung membagi kolom dengan koma tanpa terpengaruh regional setting
+            fwrite($file, "sep=,\n");
+            
+            fputcsv($file, $columns);
+
+            foreach ($pemeriksaans as $item) {
+                $row = [
+                    $item->id,
+                    $item->nim,
+                    $item->name,
+                    $item->jenis_kelamin,
+                    $item->usia,
+                    $item->fakultas,
+                    $item->prodi,
+                    $item->perawat ? $item->perawat->name : '-',
+                    $item->dokter ? $item->dokter->name : '-',
+                    $item->tinggi_badan,
+                    $item->berat_badan,
+                    $item->imt,
+                    $item->tekanan_darah,
+                    $item->ishihara,
+                    $item->lingkar_perut,
+                    $item->gula_darah,
+                    $item->visus_mata,
+                    $item->kesimpulan,
+                    $item->rekomendasi,
+                    $item->created_at ? $item->created_at->format('Y-m-d H:i:s') : ''
+                ];
+                fputcsv($file, $row);
+            }
+            fclose($file);
+        };
+
+        return response()->stream($callback, 200, $headers);
+    }
+
+    public function update(Request $request, $id)
+    {
+        $request->validate([
+            'name' => 'nullable|string',
+            'nik' => 'nullable|string',
+            'nim' => 'nullable|string',
+            'jenis_kelamin' => 'nullable|in:laki-laki,perempuan',
+            'usia' => 'nullable|integer',
+            'fakultas' => 'nullable|string',
+            'prodi' => 'nullable|string',
+            'tempat_tanggal_lahir' => 'nullable|string',
+            'alamat_asal' => 'nullable|string',
+            'alamat_malang' => 'nullable|string',
+            'wa' => 'nullable|string',
+            'nama_wali' => 'nullable|string',
+            'wa_wali' => 'nullable|string',
+            'skrining_kesehatan_mental' => 'nullable|string',
+            'disabilitas' => 'nullable|string',
+            'tinggi_badan' => 'nullable|numeric',
+            'berat_badan' => 'nullable|numeric',
+            'imt' => 'nullable|numeric',
+            'riwayat_sakit' => 'nullable|string',
+            'riwayat_kesehatan_fisik' => 'nullable|string',
+            'keluhan' => 'nullable|string',
+            'tekanan_darah' => 'nullable|string',
+            'ishihara' => 'nullable|string',
+            'lingkar_perut' => 'nullable|numeric',
+            'gula_darah' => 'nullable|numeric',
+            'visus_mata' => 'nullable|in:Normal,Gangguan',
+            'kesimpulan' => 'nullable|string',
+            'rekomendasi' => 'nullable|string',
+        ]);
+
+        $pemeriksaan = PemeriksaanKesehatan::findOrFail($id);
+        $pemeriksaan->update([
+            'name' => $request->name,
+            'nik' => $request->nik,
+            'nim' => $request->nim,
+            'jenis_kelamin' => $request->jenis_kelamin,
+            'usia' => $request->usia,
+            'fakultas' => $request->fakultas,
+            'prodi' => $request->prodi,
+            'tempat_tanggal_lahir' => $request->tempat_tanggal_lahir,
+            'alamat_asal' => $request->alamat_asal,
+            'alamat_malang' => $request->alamat_malang,
+            'wa' => $request->wa,
+            'nama_wali' => $request->nama_wali,
+            'wa_wali' => $request->wa_wali,
+            'skrining_kesehatan_mental' => $request->skrining_kesehatan_mental,
+            'disabilitas' => $request->disabilitas,
+            'tinggi_badan' => $request->tinggi_badan,
+            'berat_badan' => $request->berat_badan,
+            'imt' => $request->imt,
+            'riwayat_sakit' => $request->riwayat_sakit,
+            'riwayat_kesehatan_fisik' => $request->riwayat_kesehatan_fisik,
+            'keluhan' => $request->keluhan,
+            'tekanan_darah' => $request->tekanan_darah,
+            'ishihara' => $request->ishihara,
+            'lingkar_perut' => $request->lingkar_perut,
+            'gula_darah' => $request->gula_darah,
+            'visus_mata' => $request->visus_mata,
+            'kesimpulan' => $request->kesimpulan,
+            'rekomendasi' => $request->rekomendasi,
+        ]);
+
+        return back()->with('success', 'Data pemeriksaan berhasil diperbarui.');
+    }
+
 }
+

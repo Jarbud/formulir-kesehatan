@@ -47,11 +47,17 @@ class DashboardController extends Controller
         $request->validate([
             'tekanan_darah' => 'required',
             'ishihara' => 'required|in:+,-,parsial',
+            'lingkar_perut' => 'nullable|numeric',
+            'gula_darah' => 'nullable|numeric',
+            'visus_mata' => 'required|in:Normal,Gangguan',
         ]);
 
         $pemeriksaan = PemeriksaanKesehatan::findOrFail($id);
         $pemeriksaan->tekanan_darah = $request->tekanan_darah;
         $pemeriksaan->ishihara = $request->ishihara;
+        $pemeriksaan->lingkar_perut = $request->lingkar_perut;
+        $pemeriksaan->gula_darah = $request->gula_darah;
+        $pemeriksaan->visus_mata = $request->visus_mata;
         $pemeriksaan->status_proses = 'dokter';
 
         // Mengambil ID user (perawat) yang sedang login saat ini
@@ -77,8 +83,8 @@ class DashboardController extends Controller
         $columns = [
             'ID', 'User ID', 'Nama Lengkap', 'NIK', 'NIM', 'Jenis Kelamin', 'Usia', 'Fakultas', 'Prodi', 
             'Tempat Tanggal Lahir', 'Alamat Asal', 'Alamat Malang', 'WA', 'Nama Wali', 'WA Wali', 
-            'Disabilitas', 'Tinggi Badan', 'Berat Badan', 'IMT', 'Riwayat Sakit', 
-            'Riwayat Kesehatan Fisik', 'Keluhan', 'Status Pembayaran', 'Tanggal Pengajuan'
+            'Disabilitas', 'Tinggi Badan', 'Berat Badan', 'IMT', 'Lingkar Perut', 'Gula Darah', 'Visus Mata',
+            'Riwayat Sakit', 'Riwayat Kesehatan Fisik', 'Keluhan', 'Status Pembayaran', 'Tanggal Pengajuan'
         ];
 
         $callback = function() use($data, $columns) {
@@ -105,6 +111,9 @@ class DashboardController extends Controller
                 $data->tinggi_badan,
                 $data->berat_badan,
                 $data->imt,
+                $data->lingkar_perut,
+                $data->gula_darah,
+                $data->visus_mata,
                 $data->riwayat_sakit,
                 $data->riwayat_kesehatan_fisik,
                 $data->keluhan,
@@ -135,8 +144,8 @@ class DashboardController extends Controller
         $columns = [
             'ID', 'User ID', 'Nama Lengkap', 'NIK', 'NIM', 'Jenis Kelamin', 'Usia', 'Fakultas', 'Prodi', 
             'Tempat Tanggal Lahir', 'Alamat Asal', 'Alamat Malang', 'WA', 'Nama Wali', 'WA Wali', 
-            'Disabilitas', 'Tinggi Badan', 'Berat Badan', 'IMT', 'Riwayat Sakit', 
-            'Riwayat Kesehatan Fisik', 'Keluhan', 'Status Pembayaran', 'Tanggal Pengajuan'
+            'Disabilitas', 'Tinggi Badan', 'Berat Badan', 'IMT', 'Lingkar Perut', 'Gula Darah', 'Visus Mata',
+            'Riwayat Sakit', 'Riwayat Kesehatan Fisik', 'Keluhan', 'Status Pembayaran', 'Tanggal Pengajuan'
         ];
 
         $callback = function() use($data, $columns) {
@@ -164,6 +173,9 @@ class DashboardController extends Controller
                     $item->tinggi_badan,
                     $item->berat_badan,
                     $item->imt,
+                    $item->lingkar_perut,
+                    $item->gula_darah,
+                    $item->visus_mata,
                     $item->riwayat_sakit,
                     $item->riwayat_kesehatan_fisik,
                     $item->keluhan,

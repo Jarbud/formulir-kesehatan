@@ -28,6 +28,7 @@ return new class extends Migration
             $table->string('wa')->nullable();
             $table->string('nama_wali')->nullable();
             $table->string('wa_wali')->nullable();
+            $table->string('skrining_kesehatan_mental')->default('Belum');
             $table->string('disabilitas')->default('Tidak Ada');
             
             // Data Fisik & Medis
@@ -47,10 +48,10 @@ return new class extends Migration
                 'Layak', 
                 'Layak dengan Syarat', 
                 'Tidak Layak Mengikuti PKKMB'
-            ])->after('status_proses');
+            ]);
 
             // Menambahkan kolom rekomendasi berupa text dan boleh kosong (nullable)
-            $table->text('rekomendasi')->nullable()->after('kesimpulan');
+            $table->text('rekomendasi')->nullable();
             
             // === TAMBAHAN KOLOM BARU ===
             // Menghubungkan ke kolom id di tabel users secara opsional (nullable)
