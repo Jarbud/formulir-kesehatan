@@ -1,18 +1,18 @@
 <x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+    <x-slot:name="header">
+        <h2 class="font-bold text-xl sm:text-2xl text-gray-800 leading-tight">
             {{ __('Perawat Dashboard') }}
         </h2>
-    </x-slot>
+    </x-slot:name>
 
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg border border-gray-100">
-                <div class="p-6 text-gray-900">
-                    <div class="flex items-center justify-between mb-6">
+    <div class="py-6 sm:py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="bg-white overflow-hidden shadow-sm sm:rounded-2xl border border-gray-100">
+                <div class="p-5 sm:p-6 text-gray-900">
+                    <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 gap-4">
                         <h3 class="text-lg font-bold text-gray-900">Daftar Fakultas (Pengajuan Pemeriksaan)</h3>
-                        <a href="{{ route('perawat.export.excel.all') }}" class="inline-flex items-center px-4 py-2 bg-green-600 text-white hover:bg-green-700 border border-transparent rounded-md text-sm font-bold transition shadow-sm">
-                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                        <a href="{{ route('perawat.export.excel.all') }}" class="inline-flex items-center px-4 py-2.5 bg-accent-500 text-white hover:bg-accent-600 border border-transparent rounded-lg text-sm font-bold transition-all duration-200 shadow-sm hover:shadow-md whitespace-nowrap">
+                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
                             Export Semua Data
                         </a>
                     </div>
