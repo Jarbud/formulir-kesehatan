@@ -14,7 +14,7 @@ class PemeriksaanKesehatan extends Model
         'prodi', 'tempat_tanggal_lahir', 'alamat_asal', 'alamat_malang', 'wa', 'nama_wali', 'wa_wali', 'skrining_kesehatan_mental', 'disabilitas', 'tinggi_badan', 
         'berat_badan', 'imt', 'riwayat_sakit', 'riwayat_kesehatan_fisik', 'keluhan', 'status_proses',
         'status_pembayaran', 'bukti_pembayaran',
-        'kesimpulan', 'rekomendasi'
+        'kesimpulan', 'rekomendasi', 'exported_at'
     ];
 
     // Relasi ke Perawat yang melakukan ACC

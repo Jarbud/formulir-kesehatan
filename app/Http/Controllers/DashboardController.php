@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\DB;
 use App\Models\User;
 use App\Models\PemeriksaanKesehatan;
 use App\Models\Faculty;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class DashboardController extends Controller
 {
@@ -231,10 +232,37 @@ class DashboardController extends Controller
         return response()->stream($callback, 200, $headers);
     }
 
-    public function laporanIndex()
+    public function laporanIndex(Request $request)
     {
         $faculties = Faculty::with('programStudis')->get();
-        return view('admin.laporan', compact('faculties'));
+        
+        $query = PemeriksaanKesehatan::query();
+        
+        if ($request->filled('fakultas')) {
+            $query->where('fakultas', $request->fakultas);
+        }
+        
+        if ($request->filled('prodi')) {
+            $query->where('prodi', $request->prodi);
+        }
+        
+        if ($request->filled('filter_waktu')) {
+            if ($request->filter_waktu === 'harian' && $request->filled('tanggal')) {
+                $query->whereDate('created_at', $request->tanggal);
+            } elseif ($request->filter_waktu === 'bulanan' && $request->filled('bulan') && $request->filled('tahun')) {
+                $query->whereMonth('created_at', $request->bulan)
+                      ->whereYear('created_at', $request->tahun);
+            } elseif ($request->filter_waktu === 'tahunan' && $request->filled('tahun')) {
+                $query->whereYear('created_at', $request->tahun);
+            }
+        }
+        
+        $total = $query->count();
+        $sudah_export = (clone $query)->whereNotNull('exported_at')->count();
+        $belum_export = (clone $query)->whereNull('exported_at')->count();
+        $export_terakhir = (clone $query)->whereNotNull('exported_at')->max('exported_at');
+        
+        return view('admin.laporan', compact('faculties', 'total', 'sudah_export', 'belum_export', 'export_terakhir'));
     }
 
     public function exportLaporan(Request $request)
@@ -299,6 +327,88 @@ class DashboardController extends Controller
         };
 
         return response()->stream($callback, 200, $headers);
+    }
+
+    public function exportLaporanPdf(Request $request)
+    {
+        $batch = in_array($request->batch, [25, 50, 75, 100]) ? $request->batch : 25;
+
+        $query = PemeriksaanKesehatan::query();
+
+        if ($request->filled('fakultas')) {
+            $query->where('fakultas', $request->fakultas);
+        }
+        if ($request->filled('prodi')) {
+            $query->where('prodi', $request->prodi);
+        }
+        if ($request->filled('filter_waktu')) {
+            if ($request->filter_waktu === 'harian' && $request->filled('tanggal')) {
+                $query->whereDate('created_at', $request->tanggal);
+            } elseif ($request->filter_waktu === 'bulanan' && $request->filled('bulan') && $request->filled('tahun')) {
+                $query->whereMonth('created_at', $request->bulan)
+                      ->whereYear('created_at', $request->tahun);
+            } elseif ($request->filter_waktu === 'tahunan' && $request->filled('tahun')) {
+                $query->whereYear('created_at', $request->tahun);
+            }
+        }
+
+        // Hanya ambil data yang belum diexport
+        $query->whereNull('exported_at');
+        $data = $query->orderBy('created_at', 'asc')->limit($batch)->get();
+
+        if ($data->isEmpty()) {
+            return redirect()->route('admin.laporan.index', $request->except(['batch', '_token']))
+                ->with('info', 'Semua data sudah diexport. Klik "Reset Status Export" jika ingin mengekspor ulang.');
+        }
+
+        // Simpan ID yang akan ditandai sebagai sudah diexport
+        $exportedIds = $data->pluck('id')->toArray();
+
+        // Generate PDF
+        $pdf = Pdf::loadView('admin.pdf.laporan', compact('data'));
+        $pdf->setPaper('A4', 'portrait');
+
+        // Tandai data yang diexport
+        PemeriksaanKesehatan::whereIn('id', $exportedIds)->update(['exported_at' => now()]);
+
+        // Buat pesan flash berisi nama yang diexport (max 5 ditampilkan)
+        $names = $data->map(function ($item) {
+            return $item->name . ' (' . $item->nim . ')';
+        });
+        $display = $names->take(5)->implode(', ');
+        $extra = $names->count() > 5 ? ', dan ' . ($names->count() - 5) . ' lainnya' : '';
+
+        session()->flash('success', 'Berhasil export ' . $data->count() . ' data: ' . $display . $extra);
+
+        return $pdf->stream('Laporan_Kesehatan_' . date('Ymd_His') . '.pdf');
+    }
+
+    public function resetExportStatus(Request $request)
+    {
+        $query = PemeriksaanKesehatan::query();
+
+        if ($request->filled('fakultas')) {
+            $query->where('fakultas', $request->fakultas);
+        }
+        if ($request->filled('prodi')) {
+            $query->where('prodi', $request->prodi);
+        }
+        if ($request->filled('filter_waktu')) {
+            if ($request->filter_waktu === 'harian' && $request->filled('tanggal')) {
+                $query->whereDate('created_at', $request->tanggal);
+            } elseif ($request->filter_waktu === 'bulanan' && $request->filled('bulan') && $request->filled('tahun')) {
+                $query->whereMonth('created_at', $request->bulan)
+                      ->whereYear('created_at', $request->tahun);
+            } elseif ($request->filter_waktu === 'tahunan' && $request->filled('tahun')) {
+                $query->whereYear('created_at', $request->tahun);
+            }
+        }
+
+        $count = $query->whereNotNull('exported_at')->count();
+        $query->update(['exported_at' => null]);
+
+        return redirect()->route('admin.laporan.index', $request->except(['_token']))
+            ->with('success', 'Status export berhasil direset untuk ' . $count . ' data.');
     }
 
     public function rangkumanPemeriksaan()

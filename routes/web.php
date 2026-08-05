@@ -44,6 +44,8 @@ Route::middleware(['auth', 'checkRole:admin'])->group(function () {
     
     Route::get('/admin/laporan', [DashboardController::class, 'laporanIndex'])->name('admin.laporan.index');
     Route::post('/admin/laporan/export', [DashboardController::class, 'exportLaporan'])->name('admin.laporan.export');
+    Route::post('/admin/laporan/export-pdf', [DashboardController::class, 'exportLaporanPdf'])->name('admin.laporan.export_pdf');
+    Route::post('/admin/laporan/reset-export', [DashboardController::class, 'resetExportStatus'])->name('admin.laporan.reset_export');
     Route::get('/admin/rangkuman', [DashboardController::class, 'rangkumanPemeriksaan'])->name('admin.rangkuman');
     Route::get('/admin/rangkuman/export-all', [DashboardController::class, 'exportKinerjaAll'])->name('admin.rangkuman.export_all');
     Route::get('/admin/rangkuman/export/{role}/{id}', [DashboardController::class, 'exportKinerjaDetails'])->name('admin.rangkuman.export');
