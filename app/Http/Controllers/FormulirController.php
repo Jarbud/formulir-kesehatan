@@ -23,12 +23,11 @@ class FormulirController extends Controller
 
     public function simpan(Request $request)
     {
-        $faculty = \App\Models\Faculty::find($request->fakultas);
-        $namaFakultas = $faculty ? $faculty->name : null;
+        $namaFakultas = $request->fakultas_nama;
         // 1. Validasi Input
         $request->validate([
-            'tinggi_badan' => 'required|numeric',
-            'berat_badan'  => 'required|numeric',
+            'tinggi_badan' => 'required|numeric|min:100|max:250',
+            'berat_badan'  => 'required|numeric|min:20|max:300',
             'imt'          => 'required|numeric',
             'alamat_asal'  => 'required|string',
             'alamat_malang'=> 'required|string',
@@ -80,9 +79,7 @@ class FormulirController extends Controller
                 'status_proses'         => 'perawat',
             ]);
 
-            // 3. Redirect ke halaman pembayaran (sesuai teks tombol 'Simpan & Bayar')
-            // Misalnya Anda menggunakan Midtrans atau payment gateway lainnya
-            return view('mahasiswa.bayar', compact('pemeriksaan'))
+            return redirect()->route('bayar', $pemeriksaan->id)
             ->with('success', 'Data berhasil disimpan. Silahkan lanjut ke pembayaran.');
 
         } catch (\Exception $e) {
@@ -91,10 +88,16 @@ class FormulirController extends Controller
         
     }
 
+    public function bayar($id)
+    {
+        $pemeriksaan = PemeriksaanKesehatan::findOrFail($id);
+        return view('mahasiswa.bayar', compact('pemeriksaan'));
+    }
+
     public function uploadBukti(Request $request)
     {
         $request->validate([
-            'pemeriksaan_id'   => 'required|exists:pemeriksaan_kesehatans,id',
+            'pemeriksaan_id'   => 'required|integer',
             'bukti_pembayaran' => 'required|file|mimes:jpg,jpeg,png,pdf|max:2048',
         ]);
 

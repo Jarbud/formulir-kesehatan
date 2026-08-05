@@ -16,6 +16,7 @@
 
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
+        @stack('styles')
     </head>
     <body class="font-sans antialiased">
         <!-- Skip to main content (Accessibility) -->
@@ -42,7 +43,7 @@
             </main>
         </div>
 
-        <!-- Toast Notification Container -->
+        @stack('scripts')
         <div x-data="{ 
             show: false, 
             message: '', 

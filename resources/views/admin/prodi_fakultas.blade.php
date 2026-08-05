@@ -16,6 +16,9 @@
                 <div class="p-6 text-gray-900">
                     <h3 class="text-lg font-bold text-gray-900 mb-6">Program Studi di {{ $fakultas }}</h3>
                     
+                    <div class="mb-4">
+                        <input type="text" id="searchProdiInput" placeholder="Cari data..." class="w-full sm:w-64 px-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
                     <div class="overflow-x-auto">
                         <table id="prodiTable" class="w-full text-left border-collapse">
                             <thead>
@@ -60,18 +63,22 @@
             </div>
         </div>
 
-        <!-- CSS & JS untuk fitur Search, Sort, dan Filter (Simple DataTables) -->
-        <link href="https://cdn.jsdelivr.net/npm/simple-datatables@9.0.3/dist/style.min.css" rel="stylesheet">
-        <script src="https://cdn.jsdelivr.net/npm/simple-datatables@9.0.3"></script>
         <script>
-            document.addEventListener("DOMContentLoaded", function() {
-                if (document.getElementById("prodiTable") && typeof simpleDatatables.DataTable !== 'undefined') {
-                    new simpleDatatables.DataTable("#prodiTable", {
-                        searchable: true,
-                        sortable: true,
-                        perPage: 10
+            document.addEventListener('DOMContentLoaded', function() {
+                function initTableSearch(tableId, inputId) {
+                    const input = document.getElementById(inputId);
+                    const table = document.getElementById(tableId);
+                    if (!input || !table) return;
+                    input.addEventListener('input', function() {
+                        const filter = this.value.toLowerCase();
+                        const rows = table.querySelectorAll('tbody tr');
+                        rows.forEach(row => {
+                            const text = row.textContent.toLowerCase();
+                            row.style.display = text.includes(filter) ? '' : 'none';
+                        });
                     });
                 }
+                initTableSearch('prodiTable', 'searchProdiInput');
             });
         </script>
     </div>

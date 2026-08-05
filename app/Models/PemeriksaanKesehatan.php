@@ -2,12 +2,13 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class PemeriksaanKesehatan extends Model
 {
-    //
+    use HasFactory;
     protected $fillable = [
         'user_id', 'name', 'nik', 'nim', 'jenis_kelamin', 'usia', 'fakultas', 'tekanan_darah', 'ishihara',
         'lingkar_perut', 'gula_darah', 'visus_mata',

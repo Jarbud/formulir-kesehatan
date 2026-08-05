@@ -16,6 +16,9 @@
                 <div class="p-6 text-gray-900">
                     <h3 class="text-lg font-bold text-gray-900 mb-6">Mahasiswa dari {{ $fakultas }}</h3>
                     
+                    <div class="mb-4">
+                        <input type="text" id="searchMahasiswaInput" placeholder="Cari data..." class="w-full sm:w-64 px-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
                     <div class="overflow-x-auto">
                         <table id="mahasiswaTable" class="w-full text-left border-collapse">
                             <thead>
@@ -62,49 +65,22 @@
             </div>
         </div>
 
-        <!-- CSS & JS untuk fitur Search, Sort, dan Filter (Simple DataTables) -->
-        <link href="https://cdn.jsdelivr.net/npm/simple-datatables@9.0.3/dist/style.min.css" rel="stylesheet">
-        <script src="https://cdn.jsdelivr.net/npm/simple-datatables@9.0.3"></script>
-        <style>
-            /* Custom CSS untuk merapikan Simple DataTables dengan Tailwind */
-            .dataTable-input, .dataTable-selector {
-                border: 1px solid #e5e7eb !important;
-                border-radius: 0.375rem !important;
-                padding: 0.375rem 0.75rem !important;
-                font-size: 0.875rem !important;
-                outline: none !important;
-            }
-            .datatable-selector {
-                width: 75px !important;
-                padding-right: 1.75rem !important; /* Ruang khusus agar angka tidak menabrak panah */
-            }
-            .dataTable-input:focus, .dataTable-selector:focus {
-                border-color: #3b82f6 !important;
-                box-shadow: 0 0 0 1px #3b82f6 !important;
-            }
-            .dataTable-pagination a {
-                border-radius: 0.375rem !important;
-            }
-            .dataTable-pagination .active a, .dataTable-pagination .active a:hover {
-                background-color: #3b82f6 !important;
-                color: white !important;
-            }
-        </style>
         <script>
-            document.addEventListener("DOMContentLoaded", function() {
-                if (document.getElementById("mahasiswaTable") && typeof simpleDatatables.DataTable !== 'undefined') {
-                    new simpleDatatables.DataTable("#mahasiswaTable", {
-                        searchable: true,
-                        sortable: true,
-                        perPage: 10,
-                        labels: {
-                            placeholder: "Cari data...",
-                            perPage: "data per halaman",
-                            noRows: "Tidak ada data yang ditemukan",
-                            info: "Menampilkan {start} sampai {end} dari {rows} data",
-                        }
+            document.addEventListener('DOMContentLoaded', function() {
+                function initTableSearch(tableId, inputId) {
+                    const input = document.getElementById(inputId);
+                    const table = document.getElementById(tableId);
+                    if (!input || !table) return;
+                    input.addEventListener('input', function() {
+                        const filter = this.value.toLowerCase();
+                        const rows = table.querySelectorAll('tbody tr');
+                        rows.forEach(row => {
+                            const text = row.textContent.toLowerCase();
+                            row.style.display = text.includes(filter) ? '' : 'none';
+                        });
                     });
                 }
+                initTableSearch('mahasiswaTable', 'searchMahasiswaInput');
             });
         </script>
     </div>

@@ -1,9 +1,9 @@
 <x-app-layout>
-    <x-slot:name="header">
+    <x-slot name="header">
         <h2 class="font-bold text-xl sm:text-2xl text-gray-800 leading-tight">
             {{ __('Perawat Dashboard') }}
         </h2>
-    </x-slot:name>
+    </x-slot>
 
     <div class="py-6 sm:py-12">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -17,6 +17,9 @@
                         </a>
                     </div>
                     
+                    <div class="mb-4">
+                        <input type="text" id="searchFakultasInput" placeholder="Cari data..." class="w-full sm:w-64 px-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
                     <div class="overflow-x-auto">
                         <table id="fakultasTable" class="w-full text-left border-collapse">
                             <thead>
@@ -61,50 +64,26 @@
             </div>
         </div>
 
-        <!-- CSS & JS untuk fitur Search, Sort, dan Filter (Simple DataTables) -->
-        <link href="https://cdn.jsdelivr.net/npm/simple-datatables@9.0.3/dist/style.min.css" rel="stylesheet">
-        <script src="https://cdn.jsdelivr.net/npm/simple-datatables@9.0.3"></script>
-        <style>
-            /* Custom CSS untuk merapikan Simple DataTables dengan Tailwind */
-            .datatable-input, .datatable-selector {
-                border: 1px solid #e5e7eb !important;
-                border-radius: 0.375rem !important;
-                padding: 0.375rem 0.75rem !important;
-                font-size: 0.875rem !important;
-                outline: none !important;
-            }
-            .datatable-selector {
-                width: 75px !important;
-                padding-right: 1.75rem !important; /* Ruang khusus agar angka tidak menabrak panah */
-            }
-            .datatable-input:focus, .dataTable-selector:focus {
-                border-color: #3b82f6 !important;
-                box-shadow: 0 0 0 1px #3b82f6 !important;
-            }
-            .datatable-pagination a {
-                border-radius: 0.375rem !important;
-            }
-            .datatable-pagination .active a, .datatable-pagination .active a:hover {
-                background-color: #3b82f6 !important;
-                color: white !important;
-            }
-        </style>
-        <script>
-            document.addEventListener("DOMContentLoaded", function() {
-                if (document.getElementById("fakultasTable") && typeof simpleDatatables.DataTable !== 'undefined') {
-                    new simpleDatatables.DataTable("#fakultasTable", {
-                        searchable: true,
-                        sortable: true,
-                        perPage: 10,
-                        labels: {
-                            placeholder: "Cari data...",
-                            perPage: "data per halaman",
-                            noRows: "Tidak ada data yang ditemukan",
-                            info: "Menampilkan {start} sampai {end} dari {rows} data",
-                        }
-                    });
-                }
-            });
-        </script>
     </div>
+
+@push('scripts')
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        function initTableSearch(tableId, inputId) {
+            const input = document.getElementById(inputId);
+            const table = document.getElementById(tableId);
+            if (!input || !table) return;
+            input.addEventListener('input', function() {
+                const filter = this.value.toLowerCase();
+                const rows = table.querySelectorAll('tbody tr');
+                rows.forEach(row => {
+                    const text = row.textContent.toLowerCase();
+                    row.style.display = text.includes(filter) ? '' : 'none';
+                });
+            });
+        }
+        initTableSearch('fakultasTable', 'searchFakultasInput');
+    });
+</script>
+@endpush
 </x-app-layout>

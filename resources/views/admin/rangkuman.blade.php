@@ -25,6 +25,7 @@
                         <span class="bg-white border border-indigo-200 text-[10px] font-bold text-indigo-600 rounded-full px-2.5 py-1">Telah di-ACC</span>
                     </div>
                     <div class="p-6">
+                        <input type="text" id="searchPerawatInput" placeholder="Cari perawat..." class="w-full mb-3 px-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
                         <table id="perawatTable" class="w-full text-left border-collapse">
                             <thead>
                                 <tr class="bg-slate-50 border-y border-slate-200 text-xs font-bold text-slate-500 uppercase tracking-wider">
@@ -71,6 +72,7 @@
                         <span class="bg-white border border-emerald-200 text-[10px] font-bold text-emerald-600 rounded-full px-2.5 py-1">Telah di-ACC</span>
                     </div>
                     <div class="p-6">
+                        <input type="text" id="searchDokterInput" placeholder="Cari dokter..." class="w-full mb-3 px-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
                         <table id="dokterTable" class="w-full text-left border-collapse">
                             <thead>
                                 <tr class="bg-slate-50 border-y border-slate-200 text-xs font-bold text-slate-500 uppercase tracking-wider">
@@ -114,62 +116,22 @@
         </div>
     </div>
 
-    <!-- CSS & JS untuk fitur Search, Sort, dan Filter (Simple DataTables) -->
-    <link href="https://cdn.jsdelivr.net/npm/simple-datatables@9.0.3/dist/style.min.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/simple-datatables@9.0.3"></script>
-    <style>
-        /* Custom CSS untuk merapikan Simple DataTables dengan Tailwind */
-        .datatable-input, .datatable-selector {
-            border: 1px solid #e5e7eb !important;
-            border-radius: 0.375rem !important;
-            padding: 0.375rem 0.75rem !important;
-            font-size: 0.875rem !important;
-            outline: none !important;
-        }
-        .datatable-selector {
-            width: 75px !important;
-            padding-right: 1.75rem !important; /* Ruang khusus agar angka tidak menabrak panah */
-        }
-        .datatable-input:focus, .dataTable-selector:focus {
-            border-color: #3b82f6 !important;
-            box-shadow: 0 0 0 1px #3b82f6 !important;
-        }
-        .datatable-pagination a {
-            border-radius: 0.375rem !important;
-        }
-        .datatable-pagination .active a, .datatable-pagination .active a:hover {
-            background-color: #3b82f6 !important;
-            color: white !important;
-        }
-    </style>
+    <!-- Search & Filter vanilla JS -->
     <script>
         document.addEventListener("DOMContentLoaded", function() {
-            if (document.getElementById("perawatTable") && typeof simpleDatatables.DataTable !== 'undefined') {
-                new simpleDatatables.DataTable("#perawatTable", {
-                    searchable: true,
-                    sortable: true,
-                    perPage: 10,
-                    labels: {
-                        placeholder: "Cari perawat...",
-                        perPage: "data per halaman",
-                        noRows: "Tidak ada data yang ditemukan",
-                        info: "Menampilkan {start} sampai {end} dari {rows} data",
-                    }
+            function initTableSearch(tableId, inputId) {
+                const input = document.getElementById(inputId);
+                const table = document.getElementById(tableId);
+                if (!input || !table) return;
+                input.addEventListener('input', function() {
+                    const filter = this.value.toLowerCase();
+                    table.querySelectorAll('tbody tr').forEach(row => {
+                        row.style.display = row.textContent.toLowerCase().includes(filter) ? '' : 'none';
+                    });
                 });
             }
-            if (document.getElementById("dokterTable") && typeof simpleDatatables.DataTable !== 'undefined') {
-                new simpleDatatables.DataTable("#dokterTable", {
-                    searchable: true,
-                    sortable: true,
-                    perPage: 10,
-                    labels: {
-                        placeholder: "Cari dokter...",
-                        perPage: "data per halaman",
-                        noRows: "Tidak ada data yang ditemukan",
-                        info: "Menampilkan {start} sampai {end} dari {rows} data",
-                    }
-                });
-            }
+            initTableSearch('perawatTable', 'searchPerawatInput');
+            initTableSearch('dokterTable', 'searchDokterInput');
         });
     </script>
 </x-app-layout>

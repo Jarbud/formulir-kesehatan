@@ -119,7 +119,7 @@
 
             <!-- Body Form -->
             <div class="bg-white p-6 sm:p-8 rounded-b-2xl shadow-md border-x border-b border-gray-100">
-                <form method="POST" action="{{ route('simpan-data') }}" id="formulir-form">
+                <form method="POST" action="{{ route('simpan-data') }}" id="formulir-form" x-data="{ loading: false }" @submit="loading = true">
                     @csrf
 
                     <!-- ==================== STEP 1: IDENTITAS ==================== -->
@@ -137,45 +137,46 @@
                                 <div class="relative sm:col-span-2">
                                     <label for="name" class="block text-xs font-bold text-gray-500 uppercase mb-1.5">Nama Lengkap <span class="text-red-500">*</span></label>
                                     <input type="text" id="name" name="name" value="{{ Auth::user()->name }}" 
-                                        class="input-base bg-gray-50 cursor-not-allowed" readonly required>
+                                        class="input-base bg-gray-50 cursor-not-allowed" readonly>
                                 </div>
 
                                 <!-- NIK & NIM -->
                                 <div class="relative">
                                     <label for="nik" class="block text-xs font-bold text-gray-500 uppercase mb-1.5">NIK <span class="text-red-500">*</span></label>
-                                    <input type="text" id="nik" name="nik" class="input-base" placeholder="16 digit NIK" required maxlength="16">
+                                    <input type="text" id="nik" name="nik" class="input-base" placeholder="16 digit NIK" maxlength="16">
                                 </div>
                                 <div class="relative">
                                     <label for="nim" class="block text-xs font-bold text-gray-500 uppercase mb-1.5">NIM <span class="text-red-500">*</span></label>
-                                    <input type="text" id="nim" name="nim" class="input-base" placeholder="Nomor Induk Mahasiswa" required>
+                                    <input type="text" id="nim" name="nim" class="input-base" placeholder="Nomor Induk Mahasiswa">
                                 </div>
 
                                 <!-- JK & Usia -->
                                 <div class="relative">
                                     <label for="jenis_kelamin" class="block text-xs font-bold text-gray-500 uppercase mb-1.5">Jenis Kelamin <span class="text-red-500">*</span></label>
-                                    <select name="jenis_kelamin" id="jenis_kelamin" class="input-base" required>
+                                    <select name="jenis_kelamin" id="jenis_kelamin" class="input-base">
                                         <option value="laki-laki">Laki-laki</option>
                                         <option value="perempuan">Perempuan</option>
                                     </select>
                                 </div>
                                 <div class="relative">
                                     <label for="usia" class="block text-xs font-bold text-gray-500 uppercase mb-1.5">Usia <span class="text-red-500">*</span></label>
-                                    <input type="number" id="usia" name="usia" class="input-base bg-gray-50 cursor-not-allowed" readonly placeholder="Otomatis" required>
+                                    <input type="number" id="usia" name="usia" class="input-base bg-gray-50 cursor-not-allowed" readonly placeholder="Otomatis">
                                 </div>
 
                                 <!-- Fakultas & Prodi -->
                                 <div class="relative">
                                     <label for="select-fakultas" class="block text-xs font-bold text-gray-500 uppercase mb-1.5">Fakultas <span class="text-red-500">*</span></label>
-                                    <select id="select-fakultas" name="fakultas" class="input-base" required onchange="updateProdi()">
+                                    <select id="select-fakultas" name="fakultas" class="input-base" onchange="updateProdi()">
                                         <option value="">-- Pilih Fakultas --</option>
                                         @foreach($faculties as $faculty)
                                             <option value="{{ $faculty->id }}">{{ $faculty->name }}</option>
                                         @endforeach
                                     </select>
+                                    <input type="hidden" id="fakultas_nama" name="fakultas_nama" value="">
                                 </div>
                                 <div class="relative">
                                     <label for="select-prodi" class="block text-xs font-bold text-gray-500 uppercase mb-1.5">Program Studi <span class="text-red-500">*</span></label>
-                                    <select id="select-prodi" name="prodi" class="input-base" disabled required>
+                                    <select id="select-prodi" name="prodi" class="input-base" disabled>
                                         <option value="">-- Pilih Fakultas Terlebih Dahulu --</option>
                                     </select>
                                 </div>
@@ -183,42 +184,42 @@
                                 <!-- Tempat Tanggal Lahir -->
                                 <div class="relative sm:col-span-2">
                                     <label for="tempat_tanggal_lahir" class="block text-xs font-bold text-gray-500 uppercase mb-1.5">Tempat, Tanggal Lahir <span class="text-red-500">*</span></label>
-                                    <input type="text" id="tempat_tanggal_lahir" name="tempat_tanggal_lahir" placeholder="Contoh: Malang, 20 April 2003" class="input-base" required>
+                                    <input type="text" id="tempat_tanggal_lahir" name="tempat_tanggal_lahir" placeholder="Contoh: Malang, 20 April 2003" class="input-base">
                                     <p class="text-xs text-gray-400 mt-1">Format: Kota, DD Bulan YYYY</p>
                                 </div>
 
                                 <!-- Alamat Asal -->
                                 <div class="relative sm:col-span-2">
                                     <label for="alamat_asal" class="block text-xs font-bold text-gray-500 uppercase mb-1.5">Alamat Asal <span class="text-red-500">*</span></label>
-                                    <input type="text" id="alamat_asal" name="alamat_asal" class="input-base" placeholder="Alamat lengkap sesuai KTP" required>
+                                    <input type="text" id="alamat_asal" name="alamat_asal" class="input-base" placeholder="Alamat lengkap sesuai KTP">
                                 </div>
 
                                 <!-- Alamat Malang -->
                                 <div class="relative sm:col-span-2">
                                     <label for="alamat_malang" class="block text-xs font-bold text-gray-500 uppercase mb-1.5">Alamat Di Malang <span class="text-red-500">*</span></label>
-                                    <input type="text" id="alamat_malang" name="alamat_malang" class="input-base" placeholder="Alamat kos / tempat tinggal di Malang" required>
+                                    <input type="text" id="alamat_malang" name="alamat_malang" class="input-base" placeholder="Alamat kos / tempat tinggal di Malang">
                                 </div>
 
                                 <!-- WA & WA Wali -->
                                 <div class="relative">
                                     <label for="wa" class="block text-xs font-bold text-gray-500 uppercase mb-1.5">No. WhatsApp <span class="text-red-500">*</span></label>
-                                    <input type="text" id="wa" name="wa" class="input-base" placeholder="08xxx" required>
+                                    <input type="text" id="wa" name="wa" class="input-base" placeholder="08xxx">
                                 </div>
                                 <div class="relative">
                                     <label for="wa_wali" class="block text-xs font-bold text-gray-500 uppercase mb-1.5">No. WA Orang Tua/Wali <span class="text-red-500">*</span></label>
-                                    <input type="text" id="wa_wali" name="wa_wali" class="input-base" placeholder="08xxx" required>
+                                    <input type="text" id="wa_wali" name="wa_wali" class="input-base" placeholder="08xxx">
                                 </div>
 
                                 <!-- Nama Wali -->
                                 <div class="relative sm:col-span-2">
                                     <label for="nama_wali" class="block text-xs font-bold text-gray-500 uppercase mb-1.5">Nama Orang Tua / Wali <span class="text-red-500">*</span></label>
-                                    <input type="text" id="nama_wali" name="nama_wali" class="input-base" placeholder="Nama lengkap orang tua / wali" required>
+                                    <input type="text" id="nama_wali" name="nama_wali" class="input-base" placeholder="Nama lengkap orang tua / wali">
                                 </div>
 
                                 <!-- Skrining & Disabilitas -->
                                 <div class="relative">
                                     <label for="skrining_kesehatan_mental" class="block text-xs font-bold text-gray-500 uppercase mb-1.5">Skrining Kesehatan Mental <span class="text-red-500">*</span></label>
-                                    <select name="skrining_kesehatan_mental" id="skrining_kesehatan_mental" class="input-base" required>
+                                    <select name="skrining_kesehatan_mental" id="skrining_kesehatan_mental" class="input-base">
                                         <option value="Belum" selected>Belum</option>
                                         <option value="Sudah">Sudah</option>
                                     </select>
@@ -248,11 +249,11 @@
                             <div class="grid grid-cols-2 gap-4">
                                 <div class="relative">
                                     <label for="tinggi_badan" class="block text-xs font-bold text-gray-700 uppercase mb-1.5">Tinggi Badan (cm) <span class="text-red-500">*</span></label>
-                                    <input type="number" id="tinggi_badan" name="tinggi_badan" class="input-base" placeholder="173" required min="50" max="250">
+                                    <input type="number" id="tinggi_badan" name="tinggi_badan" class="input-base" placeholder="173" min="50" max="250">
                                 </div>
                                 <div class="relative">
                                     <label for="berat_badan" class="block text-xs font-bold text-gray-700 uppercase mb-1.5">Berat Badan (kg) <span class="text-red-500">*</span></label>
-                                    <input type="number" id="berat_badan" name="berat_badan" class="input-base" placeholder="65" required min="10" max="300">
+                                    <input type="number" id="berat_badan" name="berat_badan" class="input-base" placeholder="65" min="10" max="300">
                                 </div>
                             </div>
 
@@ -427,8 +428,6 @@
                         <button type="submit" 
                             x-show="currentStep === 3"
                             x-transition
-                            x-data="{ loading: false }"
-                            @click="loading = true"
                             :disabled="loading"
                             :class="loading ? 'opacity-75 cursor-not-allowed' : ''"
                             class="group relative w-full sm:w-auto inline-flex items-center justify-center px-8 py-3 bg-gradient-to-r from-primary-600 to-primary-700 text-white rounded-xl font-bold text-base hover:from-primary-700 hover:to-primary-800 transition-all duration-300 shadow-lg shadow-primary-600/30 hover:shadow-xl hover:shadow-primary-600/40 hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2">
@@ -556,6 +555,9 @@
             const fakultasSelect = document.getElementById('select-fakultas');
             const prodiSelect = document.getElementById('select-prodi');
             const selectedFacultyId = fakultasSelect.value;
+            const fakultasNamaInput = document.getElementById('fakultas_nama');
+            const activeFacultyData = masterData.find(f => f.id == selectedFacultyId);
+            fakultasNamaInput.value = activeFacultyData ? activeFacultyData.name : '';
 
             prodiSelect.innerHTML = '';
 

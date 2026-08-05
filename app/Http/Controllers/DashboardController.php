@@ -607,36 +607,14 @@ class DashboardController extends Controller
         ]);
 
         $pemeriksaan = PemeriksaanKesehatan::findOrFail($id);
-        $pemeriksaan->update([
-            'name' => $request->name,
-            'nik' => $request->nik,
-            'nim' => $request->nim,
-            'jenis_kelamin' => $request->jenis_kelamin,
-            'usia' => $request->usia,
-            'fakultas' => $request->fakultas,
-            'prodi' => $request->prodi,
-            'tempat_tanggal_lahir' => $request->tempat_tanggal_lahir,
-            'alamat_asal' => $request->alamat_asal,
-            'alamat_malang' => $request->alamat_malang,
-            'wa' => $request->wa,
-            'nama_wali' => $request->nama_wali,
-            'wa_wali' => $request->wa_wali,
-            'skrining_kesehatan_mental' => $request->skrining_kesehatan_mental,
-            'disabilitas' => $request->disabilitas,
-            'tinggi_badan' => $request->tinggi_badan,
-            'berat_badan' => $request->berat_badan,
-            'imt' => $request->imt,
-            'riwayat_sakit' => $request->riwayat_sakit,
-            'riwayat_kesehatan_fisik' => $request->riwayat_kesehatan_fisik,
-            'keluhan' => $request->keluhan,
-            'tekanan_darah' => $request->tekanan_darah,
-            'ishihara' => $request->ishihara,
-            'lingkar_perut' => $request->lingkar_perut,
-            'gula_darah' => $request->gula_darah,
-            'visus_mata' => $request->visus_mata,
-            'kesimpulan' => $request->kesimpulan,
-            'rekomendasi' => $request->rekomendasi,
-        ]);
+        $pemeriksaan->update(array_filter($request->only([
+            'name', 'nik', 'nim', 'jenis_kelamin', 'usia', 'fakultas', 'prodi',
+            'tempat_tanggal_lahir', 'alamat_asal', 'alamat_malang', 'wa', 'nama_wali',
+            'wa_wali', 'skrining_kesehatan_mental', 'disabilitas', 'tinggi_badan',
+            'berat_badan', 'imt', 'riwayat_sakit', 'riwayat_kesehatan_fisik', 'keluhan',
+            'tekanan_darah', 'ishihara', 'lingkar_perut', 'gula_darah', 'visus_mata',
+            'kesimpulan', 'rekomendasi', 'status_pembayaran',
+        ]), fn($v) => !is_null($v)));
 
         return back()->with('success', 'Data pemeriksaan berhasil diperbarui.');
     }

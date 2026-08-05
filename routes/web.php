@@ -94,6 +94,7 @@ Route::middleware(['auth', 'checkRole:mahasiswa'])->group(function () {
 
     Route::get('/formulir', [FormulirController::class, 'index'])->name('formulir');
     Route::post('/simpan-data', [FormulirController::class, 'simpan'])->name('simpan-data');
+    Route::get('/bayar/{id}', [FormulirController::class, 'bayar'])->name('bayar');
     Route::post('/upload-bukti', [FormulirController::class, 'uploadBukti'])->name('upload-bukti');
     Route::get('/riwayat', [FormulirController::class, 'riwayat'])->name('riwayat');
     // Sesuaikan nama controller dan parameternya (misal menggunakan ID mahasiswa)
