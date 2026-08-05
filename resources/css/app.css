@@ -1,3 +1,203 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* ===== CSS VARIABLES ===== */
+@layer base {
+  :root {
+    /* Colors - Primary */
+    --color-primary-50: #eff6ff;
+    --color-primary-100: #dbeafe;
+    --color-primary-500: #3b82f6;
+    --color-primary-600: #2563eb;
+    --color-primary-700: #1d4ed8;
+    --color-primary-800: #1e40af;
+    
+    /* Colors - Accent */
+    --color-accent-50: #ecfdf5;
+    --color-accent-100: #d1fae5;
+    --color-accent-400: #34d399;
+    --color-accent-500: #10b981;
+    --color-accent-600: #059669;
+    
+    /* Colors - Semantic */
+    --color-success: #10b981;
+    --color-warning: #f59e0b;
+    --color-error: #ef4444;
+    --color-info: #3b82f6;
+    
+    /* Typography */
+    --font-primary: 'Inter Variable', 'Inter', 'Figtree', ui-sans-serif, system-ui, sans-serif;
+    
+    /* Spacing */
+    --space-xs: 0.5rem;
+    --space-sm: 0.75rem;
+    --space-md: 1rem;
+    --space-lg: 1.5rem;
+    --space-xl: 2rem;
+    
+    /* Shadows */
+    --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+    --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+    --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+    --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1);
+    
+    /* Animation */
+    --duration-fast: 150ms;
+    --duration-base: 250ms;
+    --duration-slow: 350ms;
+    --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+    --ease-spring: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  }
+  
+  /* Dark mode variables (PREP - not activated) */
+  .dark {
+    --color-dark-bg-primary: #0f172a;
+    --color-dark-bg-secondary: #1e293b;
+    --color-dark-text-primary: #f1f5f9;
+    --color-dark-text-secondary: #cbd5e1;
+    --color-dark-border: #475569;
+  }
+  
+  /* Base styles */
+  * {
+    @apply border-gray-200;
+  }
+  
+  body {
+    @apply bg-gray-50 text-gray-900 antialiased;
+    font-family: var(--font-primary);
+  }
+  
+  /* Focus visible */
+  *:focus-visible {
+    @apply outline-none ring-2 ring-primary-500 ring-offset-2 rounded;
+  }
+}
+
+/* ===== CUSTOM UTILITIES ===== */
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+  
+  .animation-delay-100 {
+    animation-delay: 100ms;
+  }
+  
+  .animation-delay-200 {
+    animation-delay: 200ms;
+  }
+  
+  .animation-delay-300 {
+    animation-delay: 300ms;
+  }
+  
+  .animation-delay-400 {
+    animation-delay: 400ms;
+  }
+  
+  /* Screen reader only */
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+  }
+  
+  .not-sr-only {
+    position: static;
+    width: auto;
+    height: auto;
+    padding: 0;
+    margin: 0;
+    overflow: visible;
+    clip: auto;
+    white-space: normal;
+  }
+}
+
+/* ===== COMPONENT STYLES ===== */
+@layer components {
+  /* Focus ring consistency */
+  .focus-ring {
+    @apply focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 transition-all duration-200;
+  }
+  
+  /* Card elevation levels */
+  .card-elevated-1 {
+    @apply bg-white rounded-xl shadow-md border border-gray-100 transition-all duration-300;
+  }
+  
+  .card-elevated-2 {
+    @apply bg-white rounded-xl shadow-lg border border-gray-100 transition-all duration-300;
+  }
+  
+  .card-hover {
+    @apply hover:shadow-xl hover:-translate-y-1;
+  }
+  
+  /* Button base styles */
+  .btn-base {
+    @apply inline-flex items-center justify-center px-6 py-3 rounded-lg font-bold text-sm transition-all duration-200 focus-ring disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+  
+  .btn-primary {
+    @apply btn-base bg-primary-600 text-white hover:bg-primary-700 active:bg-primary-800 shadow-md hover:shadow-lg;
+  }
+  
+  .btn-secondary {
+    @apply btn-base bg-white text-gray-700 border-2 border-gray-300 hover:bg-gray-50 hover:border-gray-400 active:bg-gray-100 shadow-sm hover:shadow-md;
+  }
+  
+  .btn-accent {
+    @apply btn-base bg-accent-500 text-white hover:bg-accent-600 active:bg-accent-700 shadow-md hover:shadow-lg;
+  }
+  
+  /* Input base styles */
+  .input-base {
+    @apply w-full px-4 py-2.5 border-2 border-gray-300 rounded-lg text-gray-900 placeholder-gray-400 bg-white transition-all duration-200 focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 disabled:bg-gray-100 disabled:text-gray-500 disabled:cursor-not-allowed;
+  }
+  
+  /* Badge styles */
+  .badge {
+    @apply inline-flex items-center px-2.5 py-1 rounded-full text-sm font-bold border;
+  }
+  
+  .badge-primary {
+    @apply badge bg-primary-50 text-primary-700 border-primary-200;
+  }
+  
+  .badge-success {
+    @apply badge bg-green-50 text-green-700 border-green-200;
+  }
+  
+  .badge-warning {
+    @apply badge bg-yellow-50 text-yellow-700 border-yellow-200;
+  }
+  
+  .badge-error {
+    @apply badge bg-red-50 text-red-700 border-red-200;
+  }
+  
+  .badge-info {
+    @apply badge bg-blue-50 text-blue-700 border-blue-200;
+  }
+}
+
+/* ===== REDUCED MOTION ===== */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
