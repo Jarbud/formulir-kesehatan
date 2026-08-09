@@ -49,6 +49,8 @@ Route::middleware(['auth', 'checkRole:admin'])->group(function () {
     Route::get('/admin/rangkuman', [DashboardController::class, 'rangkumanPemeriksaan'])->name('admin.rangkuman');
     Route::get('/admin/rangkuman/export-all', [DashboardController::class, 'exportKinerjaAll'])->name('admin.rangkuman.export_all');
     Route::get('/admin/rangkuman/export/{role}/{id}', [DashboardController::class, 'exportKinerjaDetails'])->name('admin.rangkuman.export');
+    Route::post('/admin/rangkuman/export-excel', [DashboardController::class, 'exportRangkumanExcel'])->name('admin.rangkuman.export_excel');
+    Route::post('/admin/rangkuman/export-pdf', [DashboardController::class, 'exportRangkumanPdf'])->name('admin.rangkuman.export_pdf');
 
     // CRUD Akun Users
     Route::resource('/admin/users', UserController::class)->names([

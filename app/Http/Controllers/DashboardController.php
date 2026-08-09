@@ -411,27 +411,214 @@ class DashboardController extends Controller
             ->with('success', 'Status export berhasil direset untuk ' . $count . ' data.');
     }
 
-    public function rangkumanPemeriksaan()
+    public function rangkumanPemeriksaan(Request $request)
     {
-        // Menggabungkan (join) tabel untuk mendapatkan nama Perawat dan total pemeriksaannya
-        $perawatSummary = DB::table('pemeriksaan_kesehatans')
+        $faculties = Faculty::with('programStudis')->get();
+        
+        $query = PemeriksaanKesehatan::query();
+        
+        // Filter Fakultas
+        if ($request->filled('fakultas')) {
+            $query->where('fakultas', $request->fakultas);
+        }
+        
+        // Filter Prodi
+        if ($request->filled('prodi')) {
+            $query->where('prodi', $request->prodi);
+        }
+        
+        // Filter Waktu
+        if ($request->filled('filter_waktu')) {
+            if ($request->filter_waktu === 'harian' && $request->filled('tanggal')) {
+                $query->whereDate('created_at', $request->tanggal);
+            } elseif ($request->filter_waktu === 'bulanan' && $request->filled('bulan') && $request->filled('tahun')) {
+                $query->whereMonth('created_at', $request->bulan)
+                      ->whereYear('created_at', $request->tahun);
+            } elseif ($request->filter_waktu === 'tahunan' && $request->filled('tahun')) {
+                $query->whereYear('created_at', $request->tahun);
+            }
+        }
+        
+        // Filter Role
+        if ($request->filled('role') && $request->role !== 'semua') {
+            if ($request->role === 'perawat') {
+                $query->whereNotNull('id_perawat_acc');
+            } elseif ($request->role === 'dokter') {
+                $query->whereNotNull('id_dokter_acc');
+            } elseif ($request->role === 'admin') {
+                $query->whereIn('status_proses', ['admin', 'selesai']);
+            }
+        }
+
+        $total = $query->count();
+        
+        // Perawat Summary (terfilter)
+        $perawatSummary = (clone $query)
+            ->whereNotNull('id_perawat_acc')
             ->join('users', 'pemeriksaan_kesehatans.id_perawat_acc', '=', 'users.id')
             ->select('users.id', 'users.name', DB::raw('count(pemeriksaan_kesehatans.id) as total'))
-            ->whereNotNull('id_perawat_acc')
             ->groupBy('users.id', 'users.name')
             ->orderByDesc('total')
             ->get();
-
-        // Menggabungkan (join) tabel untuk mendapatkan nama Dokter dan total pemeriksaannya
-        $dokterSummary = DB::table('pemeriksaan_kesehatans')
+        
+        // Dokter Summary (terfilter)
+        $dokterSummary = (clone $query)
+            ->whereNotNull('id_dokter_acc')
             ->join('users', 'pemeriksaan_kesehatans.id_dokter_acc', '=', 'users.id')
             ->select('users.id', 'users.name', DB::raw('count(pemeriksaan_kesehatans.id) as total'))
-            ->whereNotNull('id_dokter_acc')
             ->groupBy('users.id', 'users.name')
             ->orderByDesc('total')
             ->get();
+        
+        return view('admin.rangkuman', compact('faculties', 'perawatSummary', 'dokterSummary', 'total'));
+    }
 
-        return view('admin.rangkuman', compact('perawatSummary', 'dokterSummary'));
+    public function exportRangkumanExcel(Request $request)
+    {
+        $query = PemeriksaanKesehatan::query();
+
+        if ($request->filled('fakultas')) {
+            $query->where('fakultas', $request->fakultas);
+        }
+        if ($request->filled('prodi')) {
+            $query->where('prodi', $request->prodi);
+        }
+        if ($request->filled('filter_waktu')) {
+            if ($request->filter_waktu === 'harian' && $request->filled('tanggal')) {
+                $query->whereDate('created_at', $request->tanggal);
+            } elseif ($request->filter_waktu === 'bulanan' && $request->filled('bulan') && $request->filled('tahun')) {
+                $query->whereMonth('created_at', $request->bulan)
+                      ->whereYear('created_at', $request->tahun);
+            } elseif ($request->filter_waktu === 'tahunan' && $request->filled('tahun')) {
+                $query->whereYear('created_at', $request->tahun);
+            }
+        }
+        if ($request->filled('role') && $request->role !== 'semua') {
+            if ($request->role === 'perawat') {
+                $query->whereNotNull('id_perawat_acc');
+            } elseif ($request->role === 'dokter') {
+                $query->whereNotNull('id_dokter_acc');
+            } elseif ($request->role === 'admin') {
+                $query->whereIn('status_proses', ['admin', 'selesai']);
+            }
+        }
+
+        $data = $query->with(['perawat', 'dokter'])->orderBy('created_at', 'desc')->get();
+
+        $roleLabel = $request->role === 'perawat' ? 'Perawat' : ($request->role === 'dokter' ? 'Dokter' : ($request->role === 'admin' ? 'Admin' : 'Semua'));
+        $filename = "Rangkuman_Kinerja_" . $roleLabel . "_" . date('Ymd_His') . ".csv";
+        $headers = [
+            "Content-type"        => "application/vnd.ms-excel; charset=UTF-8",
+            "Content-Disposition" => 'attachment; filename="' . $filename . '"',
+            "Pragma"              => "no-cache",
+            "Cache-Control"       => "must-revalidate, post-check=0, pre-check=0",
+            "Expires"             => "0"
+        ];
+
+        $columns = [
+            'ID Pemeriksaan', 'NIK', 'NIM', 'Nama Mahasiswa', 'Jenis Kelamin', 'Usia', 'Fakultas', 'Prodi',
+            'Perawat Pemeriksa', 'Dokter Pemeriksa', 'Tinggi Badan', 'Berat Badan', 'IMT',
+            'Tekanan Darah', 'Ishihara', 'Lingkar Perut', 'Gula Darah', 'Visus Mata',
+            'Kesimpulan', 'Rekomendasi', 'Status Proses', 'Tanggal Pemeriksaan'
+        ];
+
+        $callback = function() use($data, $columns) {
+            $file = fopen('php://output', 'w');
+            fwrite($file, "\xEF\xBB\xBF");
+            fwrite($file, "sep=,\n");
+            fputcsv($file, $columns);
+
+            foreach ($data as $item) {
+                $row = [
+                    $item->id,
+                    $item->nik,
+                    $item->nim,
+                    $item->name,
+                    $item->jenis_kelamin,
+                    $item->usia,
+                    $item->fakultas,
+                    $item->prodi,
+                    $item->perawat ? $item->perawat->name : '-',
+                    $item->dokter ? $item->dokter->name : '-',
+                    $item->tinggi_badan,
+                    $item->berat_badan,
+                    $item->imt,
+                    $item->tekanan_darah,
+                    $item->ishihara,
+                    $item->lingkar_perut,
+                    $item->gula_darah,
+                    $item->visus_mata,
+                    $item->kesimpulan,
+                    $item->rekomendasi,
+                    $item->status_proses,
+                    $item->created_at ? $item->created_at->format('Y-m-d H:i:s') : ''
+                ];
+                fputcsv($file, $row);
+            }
+            fclose($file);
+        };
+
+        return response()->stream($callback, 200, $headers);
+    }
+
+    public function exportRangkumanPdf(Request $request)
+    {
+        $batch = in_array($request->batch, [25, 50, 75, 100]) ? $request->batch : 25;
+
+        $query = PemeriksaanKesehatan::query();
+
+        if ($request->filled('fakultas')) {
+            $query->where('fakultas', $request->fakultas);
+        }
+        if ($request->filled('prodi')) {
+            $query->where('prodi', $request->prodi);
+        }
+        if ($request->filled('filter_waktu')) {
+            if ($request->filter_waktu === 'harian' && $request->filled('tanggal')) {
+                $query->whereDate('created_at', $request->tanggal);
+            } elseif ($request->filter_waktu === 'bulanan' && $request->filled('bulan') && $request->filled('tahun')) {
+                $query->whereMonth('created_at', $request->bulan)
+                      ->whereYear('created_at', $request->tahun);
+            } elseif ($request->filter_waktu === 'tahunan' && $request->filled('tahun')) {
+                $query->whereYear('created_at', $request->tahun);
+            }
+        }
+        if ($request->filled('role') && $request->role !== 'semua') {
+            if ($request->role === 'perawat') {
+                $query->whereNotNull('id_perawat_acc');
+            } elseif ($request->role === 'dokter') {
+                $query->whereNotNull('id_dokter_acc');
+            } elseif ($request->role === 'admin') {
+                $query->whereIn('status_proses', ['admin', 'selesai']);
+            }
+        }
+
+        $query->whereNull('exported_at');
+        $data = $query->orderBy('created_at', 'asc')->limit($batch)->get();
+
+        if ($data->isEmpty()) {
+            return redirect()->route('admin.rangkuman', $request->except(['batch', '_token']))
+                ->with('info', 'Semua data sudah diexport. Klik "Reset Status Export" jika ingin mengekspor ulang.');
+        }
+
+        $exportedIds = $data->pluck('id')->toArray();
+
+        $pdf = Pdf::loadView('admin.pdf.laporan', compact('data'));
+        $pdf->setPaper('A4', 'portrait');
+
+        PemeriksaanKesehatan::whereIn('id', $exportedIds)->update(['exported_at' => now()]);
+
+        $roleLabel = $request->role === 'perawat' ? 'Perawat' : ($request->role === 'dokter' ? 'Dokter' : ($request->role === 'admin' ? 'Admin' : 'Semua'));
+
+        $names = $data->map(function ($item) {
+            return $item->name . ' (' . $item->nim . ')';
+        });
+        $display = $names->take(5)->implode(', ');
+        $extra = $names->count() > 5 ? ', dan ' . ($names->count() - 5) . ' lainnya' : '';
+
+        session()->flash('success', 'Berhasil export ' . $data->count() . ' data (' . $roleLabel . '): ' . $display . $extra);
+
+        return $pdf->download('Rangkuman_Kinerja_' . $roleLabel . '_' . date('Ymd_His') . '.pdf');
     }
 
     public function exportKinerjaDetails($role, $id)
@@ -462,7 +649,7 @@ class DashboardController extends Controller
         ];
 
         $columns = [
-            'ID Pemeriksaan', 'NIM', 'Nama Mahasiswa', 'Jenis Kelamin', 'Usia', 'Fakultas', 'Prodi', 
+            'ID Pemeriksaan', 'NIK', 'NIM', 'Nama Mahasiswa', 'Jenis Kelamin', 'Usia', 'Fakultas', 'Prodi', 
             'Tinggi Badan', 'Berat Badan', 'IMT', 'Tekanan Darah', 'Ishihara', 'Lingkar Perut', 'Gula Darah', 'Visus Mata',
             'Kesimpulan', 'Rekomendasi', 'Tanggal Pemeriksaan'
         ];
@@ -480,6 +667,7 @@ class DashboardController extends Controller
             foreach ($pemeriksaans as $item) {
                 $row = [
                     $item->id,
+                    $item->nik,
                     $item->nim,
                     $item->name,
                     $item->jenis_kelamin,
@@ -526,7 +714,7 @@ class DashboardController extends Controller
         ];
 
         $columns = [
-            'ID Pemeriksaan', 'NIM', 'Nama Mahasiswa', 'Jenis Kelamin', 'Usia', 'Fakultas', 'Prodi', 
+            'ID Pemeriksaan', 'NIK', 'NIM', 'Nama Mahasiswa', 'Jenis Kelamin', 'Usia', 'Fakultas', 'Prodi', 
             'Perawat Pemeriksa', 'Dokter Pemeriksa', 'Tinggi Badan', 'Berat Badan', 'IMT', 
             'Tekanan Darah', 'Ishihara', 'Lingkar Perut', 'Gula Darah', 'Visus Mata',
             'Kesimpulan', 'Rekomendasi', 'Tanggal Pemeriksaan'
@@ -545,6 +733,7 @@ class DashboardController extends Controller
             foreach ($pemeriksaans as $item) {
                 $row = [
                     $item->id,
+                    $item->nik,
                     $item->nim,
                     $item->name,
                     $item->jenis_kelamin,
