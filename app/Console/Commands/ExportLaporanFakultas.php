@@ -9,7 +9,7 @@ use Barryvdh\DomPDF\Facade\Pdf;
 
 class ExportLaporanFakultas extends Command
 {
-    protected $signature = 'export:laporan-fakultas';
+    protected $signature = 'export:laporan-fakultas {--force}';
     protected $description = 'Export PDF laporan kesehatan per fakultas dan kesimpulan';
 
     private $kesimpulanMap = [
@@ -21,6 +21,7 @@ class ExportLaporanFakultas extends Command
     public function handle()
     {
         ini_set('memory_limit', '2G');
+        $force = $this->option('force');
 
         $year = date('Y');
         $storagePath = storage_path('app');
@@ -57,7 +58,7 @@ class ExportLaporanFakultas extends Command
                 PemeriksaanKesehatan::where('fakultas', $fakultas)
                     ->where('kesimpulan', $kesimpulanFull)
                     ->orderBy('created_at', 'asc')
-                    ->chunk($chunkSize, function ($data) use (&$chunkIndex, $totalChunks, $abbr, $kesimpulanFull, $kesimpulanFile, $year, $storagePath, $fakultas, &$totalGenerated) {
+                    ->chunk($chunkSize, function ($data) use (&$chunkIndex, $totalChunks, $abbr, $kesimpulanFull, $kesimpulanFile, $year, $storagePath, $fakultas, &$totalGenerated, $force) {
                         $chunkIndex++;
 
                         if ($totalChunks === 1) {
@@ -67,6 +68,11 @@ class ExportLaporanFakultas extends Command
                         }
 
                         $filepath = $storagePath . DIRECTORY_SEPARATOR . $filename;
+
+                        if (!$force && file_exists($filepath)) {
+                            $this->line("  <comment>⏭</comment> {$fakultas} | {$kesimpulanFull} | Part {$chunkIndex}/{$totalChunks} | SKIP (sudah ada)");
+                            return;
+                        }
 
                         $pdf = Pdf::loadView('admin.pdf.laporan', ['data' => $data]);
                         $pdf->setPaper('A4', 'portrait');
